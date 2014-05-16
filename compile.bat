@@ -17,7 +17,7 @@ makeindex -s %jobname%.ist -t %jobname%.glg -o %jobname%.gls %jobname%.glo
 makeindex -s %jobname%.ist -t %jobname%.alg -o %jobname%.acr %jobname%.acn
 pdflatex -shell-escape .\%jobname%.tex
 call clean.bat
-cls
+
 echo ****************************************************************************
 echo 正式编译前应该访问https://github.com/shifujun/UESTCthesis检查模板是否有更新！
 echo ****************************************************************************
