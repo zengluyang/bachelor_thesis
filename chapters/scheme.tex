@@ -1,107 +1,95 @@
 % !Mode:: "TeX:UTF-8"
 
 \chapter{方案设计}
-\section{B/S结构与AJAX技术}
+本章主要介绍整个系统的方案设计。首先介绍了本系统在技术方案选择时的考虑，选择这些技术的原因以及好处；然后介绍了一种流行的面向对象设计模式，MVC设计模式；最后介绍了在本系统的设计中，如何利用MVC设计模式将各个模块解耦，实现在设计过程中的高内聚、低耦合，并给出了本系统的单次请求时序图，说明了本系统是如何运用MVC设计模式进行设计的。
 
-B/S（Browser/Server）结构\citeup{shuchun2000design}即浏览器和服务器结构。它是随着Internet技术的兴起，对C/S结构的一种变化或者改进的结构。在这种结构下，用户工作界面是通过WWW浏览器来实现，极少部分事务逻辑在前端（Browser）实现，但是主要事务逻辑在服务器端（Server）实现，形成所谓三层结构。
-
-\subsection{传统C/S结构的缺点}
+\section{技术选型}
+\subsection{系统结构选择}
+对于本系统，可采用C/S结构或者B/S结构来实现。
+\subsubsection{传统C/S结构的缺点}
 C/S（Client/Server）结构，即大家熟知的客户机和服务器结构。它是软件系统体系结构，通过它可以充分利用两端硬件环境的优势，将任务合理分配到Client端和Server端来实现，降低了系统的通讯开销。
 
 传统的C/S体系结构虽然采用的是开放模式，但这只是系统开发一级的开放性，在特定的应用中无论是Client端还是Server端都还需要特定的软件支持。由于没能提供用户真正期望的开放环境，C/S结构的软件需要针对不同的操作系统系统开发不同版本的软件，加之产品的更新换代十分快，已经很难适应百台电脑以上局域网用户同时使用。而且代价高，效率低。
 
 其次，采用C/S架构，网络管理工作人员既要对服务器维护管理，又要对客户端维护和管理，这需要高昂的投资和复杂的技术支持，维护成本很高，维护任务量大。
 
-\subsection{B/S结构的优点}
+\subsubsection{B/S结构的优点}
 与C/S结构相比较，B/S结构的优点主要有跨平台性和易维护性\citeup{jiangleihong2001mis}。
 
 以目前的技术看，局域网建立B/S结构的网络应用，并通过Internet/Intranet模式下数据库应用，相对易于把握、成本也是较低的。它是一次性到位的开发，能实现不同的人员，从不同的地点，以不同的接入方式（比如LAN、WLAN、WAN,Internet/Intranet等）、不同的终端（PC机、智能手机以及平板电脑等）、不同的操作系统（Windows、Linux、Mac OS X、iOS、Android等）访问和操作共同的数据库；它能有效地保护数据平台和管理访问权限，服务器数据库也很安全。特别是在JAVA、PHP这样的跨平台语言出现之后，B/S架构管理软件更是方便、快捷、高效。
 
 另外，软件系统的改进和升级越来越频繁，B/S架构的产品明显体现着更为方便的特性。对一个稍微大一点单位来说，系统管理人员如果需要在几百甚至上千部电脑之间来回奔跑，效率和工作量是可想而知的，但B/S架构的软件只需要管理服务器就行了，所有的客户端只是浏览器，根本不需要做任何的维护。无论用户的规模有多大，有多少分支机构都不会增加任何维护升级的工作量，所有的操作只需要针对服务器进行。
 
-\subsection{AJAX技术}
-AJAX即“Asynchronous JavaScript and XML”（异步的JavaScript与XML技术），指的是一套综合了多项技术的浏览器端网页开发技术。Ajax的概念由Jesse James Garrett所提出\citeup{garrett2005ajax}。
-
-传统的Web应用允许用户端填写表单（form），当提交表单时就向Web服务器发送一个请求。服务器接收并处理传来的表单，然后送回一个新的网页，但这个做法浪费了许多带宽，因为在前后两个页面中的大部分HTML码往往是相同的。由于每次应用的沟通都需要向服务器发送请求，应用的回应时间依赖于服务器的回应时间。这导致了用户界面的回应比本机应用慢得多。
-
-与此不同，AJAX应用可以仅向服务器发送并取回必须的数据，并在客户端采用JavaScript处理来自服务器的回应。因为在服务器和浏览器之间交换的数据大量减少（大约只有原来的5\%）,服务器回应更快了。同时，很多的处理工作可以在发出请求的客户端机器上完成，因此Web服务器的负荷也减少了。
+\subsubsection{AJAX技术的优点}
 
 通过Ajax技术，采用B/S架构的程序也能在客户端电脑上进行部分处理和刷新，从而大大的减轻了服务器的负担；并增加了交互性，能进行局部实时刷新，能够达到和传统C/S结构相同的用户体验。
 
-\subsection{小结}
+\subsubsection{小结}
 
 综上所述，本系统选择采用基于AJAX技术的B/S结构，这样既能使本系统具有跨平台性和易维护性的优点，也能够提供和传统C/S结构相同的用户体验。
 
-\section{LAMP}
-\label{lamp}
-LAMP是指一组通常一起使用来运行动态网站或者服务器的自由软件名称首字母缩写：
+\subsection{服务器软件选择}
 
-\begin{enumerate}
-\item Linux，操作系统
-\item Apache，网页服务器
-\item MySQL，数据库管理系统
-\item PHP，脚本语言
-\end{enumerate}
+目前Internet上流行的网站构架方式是LAMP（Linux Apache MySQL PHP），即是用Linux作为操作系统，Apache作为Web服务器，MySQL作为数据库，PHP（部分网站也使用Perl或Python）作为服務器端脚本解释器。由于这四个软件都是开放源代码软件，因此使用这种方式可以以较低的成本创建起一个稳定、免费的网站系统。LAMP所有组成产品均是开源软件，是国际上成熟的架构框架，很多流行的商业应用都是采取这个架构，和Java/J2EE架构相比，LAMP具有Web资源丰富、轻量、快速开发等特点，微软的.NET架构相比，LAMP具有通用、跨平台、高性能、低价格的优势，LAMP软件可以说是当前最为流行的动态网页解决方案\citeup{he2007best}。
 
-目前Internet上流行的网站构架方式是LAMP（Linux Apache MySQL PHP），即是用Linux作为操作系统，Apache作为Web服务器，MySQL作为数据库，PHP（部分网站也使用Perl或Python）作为服務器端脚本解释器。由于这四个软件都是开放源代码软件，因此使用这种方式可以以较低的成本创建起一个稳定、免费的网站系统。LAMP软件可以说是当前最为流行的动态网页解决方案\citeup{he2007best}。因此，在本系统中，系统程序运行在Linux操作系统下，由Apache HTTP服务器提供内容，在MySQL数据库中存储内容，利用PHP来实现程序逻辑。
+因此，在本系统中，系统程序运行在Linux操作系统下，由Apache HTTP服务器提供内容，在MySQL数据库中存储内容，利用PHP来实现程序逻辑。
 
-\subsection{服务器操作系统 Linux}
+\subsection{PHP框架选择}
 
-Linux作为本系统服务器的操作系统，主要有开源免费、良好的生态系统、更好的性能几点优势。
-
-Linux 内核源代码可以免费下载。大多数 Linux 发布版本，包括 GNU/Linux 的发行版本和商业的发行版本几乎都提供免费下载服务。免费意味着零试用成本，也不需要为安装在第二台机器上付费。
-
-Linux 作为服务器的优势是，他目前具有最好的生态系统，服务器端的各种软件都为它而设计，默认都认为你是在 Linux上运行，Apache、MySQL等软件随能够在Windows下运行，但是性能却显著地比在Linux下运行时低\citeup{ramana2005some}。
-
-\subsection{网页服务器 Apache}
-Apache HTTP Server（简称Apache）是Apache软件基金会的一个开放源代码的网页服务器，可以在大多数计算机操作系统中运行，由于其跨平台和安全性被广泛使用，是最流行的Web服务器端软件之一\citeup{apache}。它快速、可靠并且可通过简单的API扩充，将Perl、PHP、Python等解释器编译到服务器中。
-\subsection{数据库管理系统 MySQL}
-MySQL是一个开放源代码的关系数据库管理系统（RDBMS），MySQL性能高、成本低、可靠性好，已经成为最流行的开源数据库，因此被广泛地应用在Internet上的中小型网站中。
-\subsection{脚本语言 PHP}
-PHP（全称：PHP：Hypertext Preprocessor，即“PHP：超文本预处理器”）是一种开源的通用计算机脚本语言，尤其适用于网络开发并可嵌入HTML中使用\citeup{php}。PHP的语法借鉴吸收了C语言、Java和Perl等流行计算机语言的特点，易于一般程序员学习。PHP的主要目标是允许网络开发人员快速编写动态页面，但PHP也被用于其他很多领域。
-\subsubsection{PHP框架}
-
-PHP框架提供了一个用以构建web应用的基本框架，从而简化了用PHP编写web应用程序的流程。换言之，PHP框架有助于促进快速应用开发，不但节省开发时间、有助于建立更稳定的应用，而且减少了重复编码的开发。通过确保适当的数据库交换和在表现层编码，框架还可以帮助初学者建立更稳定的应用服务。这可以让你花更多的时间去创建实际的Web应用程序，而不是花时间写重复的代码。
-
-PHP框架的作用相当于模型-视图-控制器（Model View Controller）。MVC是种编程的架构模式，将业务逻辑从UI中分离出来，允许一个一个单独修改（也称为关注点分离）。在MVC中，Model指数据，View指表现层，Controller则指应用程序或业务逻辑。基本上， MVC打破了一个应用的开发进程，这样各组件就可以不受影响地各自工作。从本质上讲，这使得用PHP编码更快更简单。
-
-\subsubsection{Yii框架}
-
-Yii框架是一个基于组件的高性能 PHP 框架，用于快速开发大型 Web 应用。
-
-在图~\ref{yiiperf.png}~中给出了与其他主流框架的性能比较，其中PPS（Requets Per Second）指每秒钟请求数，反映了使用不同框架编写同样功能程序每秒钟所能处理的请求数目，越高越好；红色部分是没有开启APC（Alternative PHP Cache，是一个开放自由的PHP opcode 缓存。它的目标是提供一个自由、 开放，和健全的框架用于缓存和优化PHP的中间代码\citeup{phpapc}）的结果，蓝色部分是开启了APC缓存的结果。
+在图~\ref{yiiperf.png}~中给出了~Yii~框架与其它主流框架的性能比较，其中PPS（Requets Per Second）指每秒钟请求数，反映了使用不同框架编写同样功能程序每秒钟所能处理的请求数目，越高越好；红色部分是没有开启APC（Alternative PHP Cache，是一个开放自由的PHP opcode 缓存。它的目标是提供一个自由、 开放，和健全的框架用于缓存和优化PHP的中间代码\citeup{phpapc}）的结果，蓝色部分是开启了APC缓存的结果。
 \pic[hbtp]{主流PHP框架性能比较}{width=1.0\textwidth}{yiiperf.png}
 
 因此，综合性能\cite{yiiperf}、文档完善程度\cite{makarov2011yii}、学习曲线三方面因素考虑，本系统选择使用了Yii框架进行开发。
-
 
 \section{MVC设计模式}
 MVC模式（Model-View-Controller）是软件工程中的一种软件架构模式，把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。
 
 MVC模式最早由Trygve Reenskaug在1978年提出\citeup{reenskaug1979thing}。MVC模式的目的是实现一种动态的程序设计，使后续对程序的修改和扩展简化，并且使程序某一部分的重复利用成为可能。除此之外，此模式通过对复杂度的简化，使程序结构更加直观:
-\begin{enumerate}
+\begin{itemize}
 \item 控制器Controller:负责转发请求，对请求进行处理。
 \item 视图View:图形界面设计
 \item 模型Model:实现程序应有的功能（实现算法等等）、实现数据管理和数据库设计(可以实现具体的功能)。
-\end{enumerate}
-\section{单次请求时序}
-如~\ref{mvc}~所示，这是本系统使用MVC设计模式某一次从服务器收到客户端的HTTP请求到服务器返回给客户端HTTP响应的时序图。
+\end{itemize}
+
+
+\section{系统MVC设计}
+本系统主要包含以下几个模块：
+\begin{itemize}
+\item 论文管理模块
+\item 科研项目管理模块
+\item 专利管理模块
+\item 人员管理模块
+\item 用户管理模块
+\end{itemize}
+
+以MVC模式进行设计，每个模块将包含一个模型层的模型类、一个控制器层的控制类、以及数个视图层的界面模版。
+又以科研项目管理模块为例，它将包含以下几个功能：
+
+\begin{itemize}
+\item 对外显示
+\item 对内显示
+\item 筛选
+\item 增加
+\item 删除
+\item 修改
+\item 查询
+\end{itemize}
+这几个功能都将分别对应科研项目控制器类中的一个动作，比如说对外显示对应动作~actionIndex~,对内显示对应动作~actionAdmin~动作,增加对应~actionCreate~动作，删除对应~actionDelete~动作等等。
+
+如~\ref{mvc}~所示，这是本系统使用MVC设计模式某一次从服务器收到客户端的HTTP请求到服务器返回给客户端HTTP响应的时序图，说明了本系统是如何运用MVC设计模式进行设计的。
+
 \pic[hbtp]{单次请求时序图}{width=1.0\textwidth}{mvc}
-在这里以用户查看论文管理模块首页为例，分析系统的整个时序流程。
+在这里以用户查看科研管理模块首页（对外显示）为例，分析系统的整个时序流程。
 \begin{enumerate}
 \item 用户点击“论文”超链接
-\item 浏览器向URL为http://domain.com/index.php?r=paper/index发送HTTP请求
-\item Apache服务器收到请求，调用mod\_php模块，对index.php执行，并且传递查询参数（Query Parameter）：r=paper/index
-\item index.php解析查询参数，调用控制器PaperController的动作actionIndex
-\item 动作actionIndex调用模型Paper的查询接口findAll
-\item 模型Paper的查询接口findAll通过TCP Socket，发送SQL语句：“SELECT * FROM TABLE\_PAPER ”到数据库
-\item 数据库返回文本查询结果，模型Paper将这些查询结果解析并使用记过例化一个新的模型类返回给动作actionIndex
+\item 浏览器向URL为http://domain.com/index.php?r=project/index发送HTTP GET请求
+\item Apache服务器收到请求，调用mod\_php模块，对index.php执行，并且传递查询字符串（Query Parameter）：r=project/index
+\item index.php解析查询字符串，调用控制器PaperController的动作actionIndex
+\item 动作actionIndex调用模型Project的查询接口findAll
+\item 模型Paper的查询接口findAll通过TCP Socket，发送SQL语句：“SELECT * FROM TABLE\_PROJECT ”到数据库
+\item 数据库返回文本查询结果，模型Paper将这些查询结果解析并使用他们例化数个新的模型类的对象返回给动作actionIndex
 \item actionIndex根据这些结果，按照视图模版渲染生成HTML结果返回给控制器
 \item 控制器在HTML结果的基础上进行修饰：添加头部和尾部，生成最终结果，返回给Apache
 \item Apache最终结果通过HTTP响应返回给浏览器
 \item 浏览器根据W3C的标准将HTTP响应绘制成响应的文字和图形，呈现给用户 
 \end{enumerate}
-
-
-\section{本章小结}
-本章主要根据本系统的需求，介绍B/S结构、LAMP架构、Yii框架、MVC设计模式的主要特点，并分析了选择它们作为实现本系统方案的原因，最后给出了本系统单次请求的时序关系，解释了了B/S结构、LAMP架构、Yii框架、MVC设计模式是如何结合在本系统中的。

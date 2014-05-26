@@ -1,0 +1,170 @@
+% !Mode:: "TeX:UTF-8"
+
+\chapter{系统测试}
+
+本章主要针对设计的系统进行测试，首先介绍了测试目标，测试环境等相关内容，接下来，分别从功能上和性能上对本系统进行验证和测试，最后针对测试数据，分析测试结果。
+
+\section{测试目标}
+
+该测试的目标主要分为系统功能和性能测试。性能测试主要测试本系统在低负载和高负载下的吞吐量以及平均响应时间。
+
+\section{测试环境}
+
+在本系统的测试过程中，使用一个服务器和多个客户端进行测试。其中服务器硬件及软件配置如表~\ref{serverconfig}~所示，PC客户端硬件及软件配置如表~\ref{clientconfig}~所示。除了PC客户端之外，还采用了平板电脑以及手机进行功能测试，测试本系统在不同大小屏幕客户端上的适应能力。
+
+\threelinetable[H]{serverconfig}{0.62\textwidth}{cc}{服务器软硬件配置}
+{部件&配置\\
+}{
+CPU&Intel Core i5-3470 3.20GHz 4核4线程\\
+内存&8GB\\
+硬盘&2TB 7200转SATA硬盘\\
+操作系统&Ubuntu 12.04 LTS 64-bit\\
+Web服务器&Apache 2.2.22\\
+关系型数据库&MySQL 5.5.32\\
+动态脚本解释器&PHP 5.3.10\\
+}{}
+
+\threelinetable[H]{clientconfig}{0.55\textwidth}{cc}{PC客户端硬件配置}
+{部件&配置\\
+}{
+CPU&Intel Core i5-430M 2.26GHz 2核4线程\\
+内存&4GB\\
+硬盘&320GB 5400转SATA硬盘\\
+操作系统&Windows 6.1.7601\\
+浏览器&Google Chrome 35.0.1916.114\\
+}{}
+
+测试网络环境如图~\ref{testconfig.pdf}~所示。
+\pic[H]{测试网络环境}{width=1.0\textwidth}{testconfig.pdf}
+
+\section{功能测试}
+\subsection{测试内容}
+测试内容按找用户身份分为三部分，分别以超级管理员管理员、模块管理员、游客的身份登录系统并测试其各项功能，其中超级管理员管理员、模块管理员可以被称为认证用户，它们都需要测试登录功能。
+
+\begin{enumerate}
+\item 认证用户
+	\begin{enumerate}
+	\item 登录，输入正确的用户名和密码，查看是否能成功登录
+	\item 登录，输入错误的用户名和密码，查看是否提示用户名、密码错误
+	\item 超级管理员
+		\begin{enumerate}
+		\item 增加用户，并设置相应权限，查看是否能在数据库增加正确的用户条目
+		\item 修改用户的用户名、权限，查看是否能在数据库修改正确的用户条目
+		\item 删除用户，查看是否能在数据库删除正确的用户条目
+		\end{enumerate}
+	\item 模块管理员
+		\begin{enumerate}
+		\item 增加、删除、修改、查询自己所拥有管理权限的模块，查看是否在数据库中有相应的改变
+		\item 格式化导入：在自己所拥有管理权限的模块，使用~Excel~文件的数据导入数据，查看数据库中是否正确地导入了Excel文件的数据
+		\item 格式化导出：在自己所拥有管理权限的模块，导出满足特定条件的条目为~Excel~文件
+		\item 增加、删除、修改、查询自己所不具有管理权限莫模块，应该提示权限不符
+		\end{enumerate}
+	\end{enumerate}
+\item 游客
+	\begin{enumerate}
+	\item 访问各个模块的前台展示部分，查看内容、格式是否正确
+	\item 访问系统的后台模块，应该提示权限不符并跳转到登录页面
+	\end{enumerate}
+\end{enumerate}
+
+\subsection{测试结果}
+
+测试的结果最终都是由浏览器的页面显示出来的，所以测试程序是否正确，主要是检查页面是否正确显示。在对本系统进行了全面的测试以后，由于篇幅有限，下面仅举例说明部分关键页面的测试结果。
+
+认证用户登录：输入认证用户正确的用户名和密码，能正确登录并显示出当前用户名和权限，如图~\ref{pngadminloginsucc.png}~所示。输入错误的用户名和密码，提示用户名或密码错误错误，如果~\ref{pngadminloginfail.png}~所示。
+\pic[htbp]{使用正确的用户名和密码登录}{width=1.0\textwidth}{pngadminloginsucc.png}
+\pic[htbp]{使用错误的用户名和密码登录}{width=1.0\textwidth}{pngadminloginfail.png}
+
+增加用户：增加一个新的用户，设置相应权限，如图~\ref{useradd}~所示，正确的新增了一个用户。
+\begin{pics}[H]{增加用户}{useradd}
+\addsubpic{增加用户表单}{width=0.4\textwidth}{pngusercreate.png}
+\addsubpic{成功增加用户}{width=0.4\textwidth}{pngusercreatesucc.png}
+\end{pics}
+
+修改用户：修改一个现有的用户，修改后的显示结果与输入的相符合，如图~\ref{usercreate}~所示。
+\begin{pics}[H]{修改用户}{usercreate}
+\addsubpic{修改用户表单}{width=0.4\textwidth}{pnguserupdate.png}
+\addsubpic{成功增加用户}{width=0.4\textwidth}{pnguserupdatesucc.png}
+\end{pics}
+
+删除用户，删除一个现有的用户，删除后该条目从数据库中消失，符合预期结果，如图~\ref{userdelete}~所示。
+\begin{pics}[H]{修改用户}{userdelete}
+\addsubpic{删除用户}{width=0.4\textwidth}{pnguserdelete.png}
+\addsubpic{成功删除用户}{width=0.4\textwidth}{pnguserdeletesucc.png}
+\end{pics}
+
+其它数据管理模块增删该查的测试过程类似，且与预期结果相符合，在这里不再赘述。接下来仅介绍科研项目模块的格式化导入、格式化导出功能的测试结果。
+
+科研项目格式化导入：如图~\ref{projectimport}~所示，提交一个在附录~\ref{projectimportformat}~给出格式的数据表格，能够正确地将他们提交到数据库中，但在测试过程中发现等待时间较长，大概在10秒左右。后经过分析发现，这是因为使用到的~PHPExcel~库是完全用~PHP~实现的，而PHP是动态解释性语言，并不适合与计算密集型的编程，考虑到使用格式化导入的次数不多，可以等待较长时间，在科研项目控制器类中导入动作中加入“set\_time\_limit(50);”，将格式化导入功能的执行超时时间设置为50秒，防止导入过程中的超时。
+
+\begin{pics}[H]{格式化导如科研项目}{projectimport}
+\addsubpic{选择~Excel~文件}{width=0.4\textwidth}{pngprojectimport.png}
+\addsubpic{成功导入}{width=0.4\textwidth}{pngprojectimportsucc.png}
+\end{pics}
+
+科研数据项目格式化导出：如图~\ref{projectexport}~所示，选择筛选条件按人员筛选，能正确地导出该人员参与的所有科研项目。
+
+\begin{pics}[H]{格式化导出科研项目}{projectexport}
+\addsubpic{选择筛选条件}{width=0.4\textwidth}{pngprojectexport.png}
+\addsubpic{成功出Excel文件}{width=0.4\textwidth}{pngprojectexportsucc.png}
+\end{pics}
+
+游客访问：如图~\ref{testindex}所示，能正确地显示相应模块的条目。当游客访问后台模块时，会正确地提示权限不足，如图~\ref{pngnotauth}所示。
+
+\begin{pics}[H]{游客访问前台展示模块}{testindex}
+\addsubpic{首页}{width=0.4\textwidth}{pngindexindex.png}
+\addsubpic{论文前台显示}{width=0.4\textwidth}{pngindexpaper.png}
+\addsubpic{科研项目前台显示}{width=0.4\textwidth}{pngindexproject.png}
+\addsubpic{专利前台显示}{width=0.4\textwidth}{pngindexpatent.png}
+\end{pics}
+
+\pic[H]{游客访问后台模块，提示权限不足}{width=1.0\textwidth}{pngnotauth.png}
+
+\section{性能测试}
+
+\subsection{测试工具}
+采用~Apache~服务器自带的~Apache Benchmark~工具进行性能测试。Apache Benchmark~工具可以模拟多个用户同时并发访问服务器的情况，对本系统的性能进行黑盒测试。
+
+ApacheBench参数说明:
+
+格式：ab [options] [http://]hostname[:port]/path
+
+-n requests Number of requests to perform：在测试会话中所执行的请求个数（本次测试总共要访问页面的次数）。默认时，仅执行一个请求。
+
+-c concurrency Number of multiple requests to make：一次产生的请求个数（并发数）。
+
+
+\subsection{测试内容}
+本次测试中，使用在表~\ref{clientconfig}~中给出的客户端进行测试，服务器和客户端连在同一局域网内，以消除网络的不稳定性对测试的影响，同时能够给予服务器更大的压力。
+\begin{enumerate}
+\item 低负载测试，访问次数为1000，并发数为1，测试命令：\\
+ab -n 1000 http://192.168.1.10/team/index.php?r=project/index
+\item 高负载测试，访问次数为1000，并发数为200，测试命令：\\
+ab -n 1000 -c 200 http://192.168.1.10 http://192.168.1.10/team/index.php?r=project/index
+\end{enumerate}
+
+\subsection{测试结果}
+
+对于低负载测试，测试结果见表~\ref{ablowcontest}~
+
+\threelinetable[H]{ablowcontest}{0.4\textwidth}{cc}{低负载测试}
+{性能参数&值\\
+}{
+吞吐量&19.18（个）\\
+平均响应时间&52.147毫秒\\
+}{}
+
+对于高负载测试，测试结果见表~\ref{abhighcontest}~
+
+\threelinetable[H]{abhighcontest}{0.4\textwidth}{cc}{高负载测试}
+{性能参数&值\\
+}{
+吞吐量&55.84（个）\\
+平均响应时间&17.908毫秒\\
+}{}
+
+\subsection{测试结果分析}
+
+响应时间是指系统对请求作出响应的时间。直观上看，这个指标与人对软件性能的主观感受是非常一致的，因为它完整地记录了整个计算机系统处理请求的时间。从测试结果中可以看出，本系统的响应时间在10毫秒级别，响应速度较快，具有较高的性能。
+
+吞吐量是指系统在单位时间内处理请求的数量。在并发数200的情形下，本系统的吞吐量为50个左右，能够满足使用需求，考虑到本次测试实在家用PC上完成的，当本系统部署在专用的多核服务器上时，能够达到更高的性能。
