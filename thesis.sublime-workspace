@@ -244,34 +244,15 @@
 	"buffers":
 	[
 		{
-			"file": "chapters/intro.tex",
+			"file": "thesis.tex",
 			"settings":
 			{
-				"buffer_size": 1341,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "% !Mode:: \"TeX:UTF-8\"\n\n\\chapter{系统方案设计}\n本章主要完成了整个系统的方案设计。首先分析了本系统在技术方案选择时的考虑，选择这些技术的原因以及好处；然后介绍了一种流行的面向对象设计模式，MVC设计模式；最后阐述了在本系统的设计中，如何利用MVC设计模式将各个模块解耦，实现在设计过程中的高内聚、低耦合，并给出了本系统的单次请求时序图，说明了本系统是如何运用MVC设计模式进行设计的。\n\n\\section{技术选型}\n\\subsection{系统体系结构结构选择}\n对于本系统，可采用C/S结构或者B/S结构来实现。\n\\subsubsection{传统C/S结构的缺点}\nC/S（Client/Server）结构，即大家熟知的客户机和服务器结构。它是软件系统体系结构，通过它可以充分利用两端硬件环境的优势，将任务合理分配到Client端和Server端来实现，降低了系统的通讯开销。\n\n传统的C/S体系结构虽然采用的是开放模式，但这只是系统开发一级的开放性，在特定的应用中无论是Client端还是Server端都还需要特定的软件支持。由于没能提供用户真正期望的开放环境，C/S结构的软件需要针对不同的操作系统系统开发不同版本的软件，加之产品的更新换代十分快，已经很难适应百台电脑以上局域网用户同时使用。而且代价高，效率低。\n\n其次，采用C/S架构，网络管理工作人员既要对服务器维护管理，又要对客户端维护和管理，这需要高昂的投资和复杂的技术支持，维护成本很高，维护任务量大。\n\n\\subsubsection{B/S结构的优点}\n与C/S结构相比较，B/S结构的优点主要有跨平台性和易维护性\\citeup{jiangleihong2001mis}。\n\n以目前的技术看，局域网建立B/S结构的网络应用，并通过Internet/Intranet模式下数据库应用，相对易于把握、成本也是较低的。它是一次性到位的开发，能实现不同的人员，从不同的地点，以不同的接入方式（比如LAN、WLAN、WAN,Internet/Intranet等）、不同的终端（PC机、智能手机以及平板电脑等）、不同的操作系统（Windows、Linux、Mac OS X、iOS、Android等）访问和操作共同的数据库；它能有效地保护数据平台和管理访问权限，服务器数据库也很安全。特别是在JAVA、PHP这样的跨平台语言出现之后，B/S架构管理软件更是方便、快捷、高效。\n\n另外，软件系统的改进和升级越来越频繁，B/S架构的产品明显体现着更为方便的特性。对一个稍微大一点单位来说，系统管理人员如果需要在几百甚至上千部电脑之间来回奔跑，效率和工作量是可想而知的，但B/S架构的软件只需要管理服务器就行了，所有的客户端只是浏览器，根本不需要做任何的维护。无论用户的规模有多大，有多少分支机构都不会增加任何维护升级的工作量，所有的操作只需要针对服务器进行。\n\n\\subsubsection{AJAX技术的优点}\n\n通过Ajax技术，采用B/S架构的程序也能在客户端电脑上进行部分处理和刷新，从而大大的减轻了服务器的负担；并增加了交互性，能进行局部实时刷新，能够达到和传统C/S结构相同的用户体验。\n\n\\subsubsection{小结}\n\n综上所述，本系统选择采用基于AJAX技术的B/S结构，这样既能使本系统具有跨平台性和易维护性的优点，也能够提供和传统C/S结构相同的用户体验。\n\n\\subsection{服务器软件选择}\n\n目前Internet上流行的网站构架方式是LAMP（Linux Apache MySQL PHP），即是用Linux作为操作系统，Apache作为Web服务器，MySQL作为数据库，PHP（部分网站也使用Perl或Python）作为服務器端脚本解释器。由于这四个软件都是开放源代码软件，因此使用这种方式可以以较低的成本创建起一个稳定、免费的网站系统。LAMP所有组成产品均是开源软件，是国际上成熟的架构框架，很多流行的商业应用都是采取这个架构，和Java/J2EE架构相比，LAMP具有Web资源丰富、轻量、快速开发等特点，微软的.NET架构相比，LAMP具有通用、跨平台、高性能、低价格的优势，LAMP软件可以说是当前最为流行的动态网页解决方案\\citeup{he2007best}。\n\n因此，在本系统中，系统程序运行在Linux操作系统下，由Apache HTTP服务器提供内容，在MySQL数据库中存储内容，利用PHP来实现程序逻辑。\n\n\\subsection{PHP框架选择}\n\n在图~\\ref{yiiperf.png}~中给出了~Yii~框架与其它主流框架的性能比较，其中PPS（Requets Per Second）指每秒钟请求数，反映了使用不同框架编写同样功能程序每秒钟所能处理的请求数目，越高越好；红色部分是没有开启APC（Alternative PHP Cache，是一个开放自由的PHP opcode 缓存。它的目标是提供一个自由、 开放，和健全的框架用于缓存和优化PHP的中间代码\\citeup{phpapc}）的结果，蓝色部分是开启了APC缓存的结果。\n\\pic[hbtp]{主流PHP框架性能比较}{width=1.0\\textwidth}{yiiperf.png}\n\n因此，综合性能\\cite{yiiperf}、文档完善程度\\cite{makarov2011yii}、学习曲线三方面因素考虑，本系统选择使用了Yii框架进行开发。\n\n\\section{MVC设计模式}\nMVC模式（Model-View-Controller）是软件工程中的一种软件架构模式，把软件系统分为三个基本部分：模型（Model）、视图（View）和控制器（Controller）。\n\nMVC模式最早由Trygve Reenskaug在1978年提出\\citeup{reenskaug1979thing}。MVC模式的目的是实现一种动态的程序设计，使后续对程序的修改和扩展简化，并且使程序某一部分的重复利用成为可能。除此之外，此模式通过对复杂度的简化，使程序结构更加直观:\n\\begin{itemize}\n\\item 控制器Controller:负责转发请求，对请求进行处理。\n\\item 视图View:图形界面设计\n\\item 模型Model:实现程序应有的功能（实现算法等等）、实现数据管理和数据库设计(可以实现具体的功能)。\n\\end{itemize}\n\n\n\\section{系统MVC设计}\n本系统主要包含以下几个模块：\n\\begin{itemize}\n\\item 论文管理模块\n\\item 科研项目管理模块\n\\item 专利管理模块\n\\item 人员管理模块\n\\item 用户管理模块\n\\end{itemize}\n\n以MVC模式进行设计，每个模块将包含一个模型层的模型类、一个控制器层的控制类、以及数个视图层的界面模版。\n又以科研项目管理模块为例，它将包含以下几个功能：\n\n\\begin{itemize}\n\\item 对外显示\n\\item 对内显示\n\\item 筛选\n\\item 增加\n\\item 删除\n\\item 修改\n\\item 查询\n\\end{itemize}\n这几个功能都将分别对应科研项目控制器类中的一个动作，比如说对外显示对应动作~actionIndex~,对内显示对应动作~actionAdmin~动作,增加对应~actionCreate~动作，删除对应~actionDelete~动作等等。\n\n如~\\ref{mvc}~所示，这是本系统使用MVC设计模式某一次从服务器收到客户端的HTTP请求到服务器返回给客户端HTTP响应的时序图，说明了本系统是如何运用MVC设计模式进行设计的。\n\n\\pic[hbtp]{单次请求时序图}{width=1.0\\textwidth}{mvc}\n在这里以用户查看科研管理模块首页（对外显示）为例，分析系统的整个时序流程。\n\\begin{enumerate}\n\\item 用户点击“论文”超链接\n\\item 浏览器向URL为http://domain.com/index.php?r=project/index发送HTTP GET请求\n\\item Apache服务器收到请求，调用mod\\_php模块，对index.php执行，并且传递查询字符串（Query Parameter）：r=project/index\n\\item index.php解析查询字符串，调用控制器PaperController的动作actionIndex\n\\item 动作actionIndex调用模型Project的查询接口findAll\n\\item 模型Paper的查询接口findAll通过TCP Socket，发送SQL语句：“SELECT * FROM TABLE\\_PROJECT ”到数据库\n\\item 数据库返回文本查询结果，模型Paper将这些查询结果解析并使用他们例化数个新的模型类的对象返回给动作actionIndex\n\\item actionIndex根据这些结果，按照视图模版渲染生成HTML结果返回给控制器\n\\item 控制器在HTML结果的基础上进行修饰：添加头部和尾部，生成最终结果，返回给Apache\n\\item Apache最终结果通过HTTP响应返回给浏览器\n\\item 浏览器根据W3C的标准将HTTP响应绘制成响应的文字和图形，呈现给用户 \n\\end{enumerate}\n\n\\section{总体框架设计}\n\n本系统系统主要用于科研团队的对外交流和内部管理，所以页面风格以简洁、直观为主，尽可能方便用户进行操作和使用。系统所有页面的主要框架如图~\\ref{mainarc.pdf}~所示。本系统的所有页面都是按照图~\\ref{mainarc.pdf}~显示的样式设计的。页面上方显示系统名称；接下来是导航栏，用户通过点击导航栏中的链接进入各个数据管理模块中去，默认进入对外展示个模块功能；导航栏右边是菜单栏，只有管理员登录过后才会显示出来，包含了对各个数据管理模块进行操作的下拉菜单，同时包括了一个登录/登出按钮。底部关于部分显示关于科研团队的简要介绍。中间的部分则显示进行各种功能操作时的信息，在执行操作和查看各种信息时，只有中间的显示部分会随着改变，显示操作结果和查看内容，而页面的顶部和底部保持不变。\n\n\\pic[hbtp]{系统总体框架}{width=1.0\\textwidth}{mainarc.pdf}\n\n\\section{数据库关系设计}\n本系统中需要存储的数据存在这以下的内在关系：\n\\begin{itemize}\n\\item 论文与人员的关系：需要对每一篇论文条目存储一个维护人员，以及数量小于等于5的作者\n\\item 论文与科研项目的关系：需要对每一篇论文条目存储不定量个支柱它的科研项目\n\\item 科研项目与人员的关系：需要对每一个科研项目条目存储一个维护人员，以及不定量个实际执行人员和不定量个责任书人员\n\\item 专利与人员的关系：需要对每一个专利项目条目存储一个维护人员，以及数量小于等于5的发明人\n\\end{itemize}\n\n在这里显然不能直接在存储各项数据的数据库表中添加若干个字段，直接存储对应的信息。如表~\\ref{tablewrongdatabase}~所示，若直接在论文数据库表中加上5个字段，存储5个作者的名字，这样做会有两点坏处，一是浪费了存储空间，若只有1个作者，任然需要占用5个作者的存储空间；二是若人员数据库表有相应的变动，无法及时的反映在论文数据库表中，破坏了数据的一致性。\n\n\\threelinetable[H]{tablewrongdatabase}{0.5\\textwidth}{lcr}{错误的存储数据间关系的做法}\n{字段名称&数据类型&说明\\\\\n}{\nid&整型&主键\\\\\ninfo&文本&论文信息\\\\\nauthor1&文本&第一作者的姓名\\\\\nauthor2&文本&第二作者的姓名\\\\\nauthor3&文本&第三作者的姓名\\\\\nauthor4&文本&第四作者的姓名\\\\\nauthor5&文本&第五作者的姓名\\\\\n}{}\n\n正确的做法是是要单独建立一个数据表，存储各个数据的内在关系，这样才能满足数据库第二范式，保持数据有效性，节约存储空\n间。如表~\\ref{tablerightdatabase}~所示，单独建立一个论文-作者表，存储具有论文与作者的关系，应该存储论文的id与作者的id，另外还需添加一个顺序字段~seq~，用于判断是第几作者。如此一来，不仅节省了存储空间，更重要的是保证的数据的有效性和一致性。\n\n\\threelinetable[H]{tablerightdatabase}{0.75\\textwidth}{lcr}{论文-作者数据库表}\n{字段名称&数据类型&说明\\\\\n}{\npaper\\_id&整型&论文id\\\\\npeople\\_id&整型&作者id\\\\\nseq&整型&取值1-5，用于判断是第几作者\\\\\n}{}\n\n本系统各个数据表之间的关系如图~\\ref{overviewer.pdf}~所示，其中为了图标的简明性，省略了数据表的大部分字段，只给出了与数据表关系有关的字段。\n\n\\pic[hbtp]{系统的实体-关系图}{width=1.0\\textwidth}{overviewer.pdf}\n",
-			"file": "chapters/scheme.tex",
-			"file_size": 12194,
-			"file_write_time": 130457514807321240,
-			"settings":
-			{
-				"buffer_size": 5542,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "contents/appendix.tex",
-			"settings":
-			{
-				"buffer_size": 56483,
+				"buffer_size": 317,
 				"line_ending": "Unix"
 			}
 		}
 	],
-	"build_system": "pdflatex",
+	"build_system": "",
 	"command_palette":
 	{
 		"height": 392.0,
@@ -375,18 +356,22 @@
 	},
 	"file_history":
 	[
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/pics/add_rect.py",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/intro.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/scheme.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/impl.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/demand.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/test.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/math.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/appendix.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/tuition.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/acknowledgements.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Cabstract.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/impl.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/论文_曾路洋.pdf",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/titlepage.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/ending.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/intro.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Eabstract.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/appendix.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/scheme.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/translation.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/original.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/reference.bib",
@@ -394,7 +379,6 @@
 		"/D/Dropbox/dev_htdocs/team/protected/tests/functional/SiteTest.php",
 		"/D/Dropbox/dev_htdocs/team/protected/tests/ab_n_1000.txt",
 		"/D/Dropbox/dev_htdocs/team/protected/tests/ab_n_1000_c_200.txt",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/acknowledgements.tex",
 		"/D/Documents/Tencent Files/449552565/FileRecv/sound0.wav",
 		"/D/Documents/Tencent Files/449552565/FileRecv/sound_0.dat",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/compile.bat",
@@ -499,10 +483,7 @@
 		"/D/Desktop/digit_stupid_broadcast/dec2bin.c",
 		"/C/Users/ZLY/AppData/Roaming/Sublime Text 2/Packages/User/CL.sublime-build",
 		"/D/Desktop/digit_stupid_broadcast/dec2bin",
-		"/C/Users/ZLY/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
-		"/C/Users/ZLY/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
-		"/C/Users/ZLY/AppData/Roaming/Sublime Text 2/Packages/User/necC.sublime-build",
-		"/D/Desktop/digit_stupid_broadcast/digit_stupid_broadcast.sublime-project"
+		"/C/Users/ZLY/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings"
 	],
 	"find":
 	{
@@ -513,6 +494,8 @@
 		"height": 0.0,
 		"where_history":
 		[
+			"",
+			"ack*.tex",
 			"*.tex",
 			"impl.tex",
 			""
@@ -523,6 +506,9 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"吞吐量",
+			"学术论文",
+			"论文",
 			"section",
 			"chapter",
 			"介绍",
@@ -647,10 +633,7 @@
 			"ctrl+b",
 			"build",
 			"CONFIG_DIR",
-			"start",
-			"t",
-			"tab",
-			"pay"
+			"start"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -658,6 +641,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"并发请求数",
+			"论文",
+			"学术论文",
 			"\\textasciigrave ",
 			"\\textasciigrave",
 			"project"
@@ -671,395 +657,31 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "chapters/intro.tex",
+					"file": "thesis.tex",
 					"settings":
 					{
-						"buffer_size": 1341,
+						"buffer_size": 317,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								861,
-								861
+								317,
+								317
 							]
 						],
 						"settings":
 						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "chapters/scheme.tex",
-					"settings":
-					{
-						"buffer_size": 5542,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								290,
-								300
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "contents/appendix.tex",
-					"settings":
-					{
-						"buffer_size": 56483,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								56420,
-								56420
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 14796.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1117,16 +739,32 @@
 		"selected_items":
 		[
 			[
+				"the",
+				"thesis.tex"
+			],
+			[
+				"add",
+				"pics/add_rect.py"
+			],
+			[
+				"test",
+				"chapters/test.tex"
+			],
+			[
+				"dema",
+				"chapters/demand.tex"
+			],
+			[
+				"demand",
+				"chapters/demand.tex"
+			],
+			[
 				"app",
 				"contents/appendix.tex"
 			],
 			[
 				"intro",
 				"chapters/intro.tex"
-			],
-			[
-				"test",
-				"chapters/test.tex"
 			],
 			[
 				"sch",
@@ -1139,10 +777,6 @@
 			[
 				"de",
 				"chapters/demand.tex"
-			],
-			[
-				"the",
-				"thesis.tex"
 			],
 			[
 				"cab",
@@ -1171,10 +805,6 @@
 			[
 				"bib",
 				"contents/reference.bib"
-			],
-			[
-				"demand",
-				"chapters/demand.tex"
 			],
 			[
 				"sche",
@@ -1619,14 +1249,6 @@
 			[
 				"layoutma",
 				"protected/views/layouts/main.php"
-			],
-			[
-				"foundcss",
-				"css/foundation.css"
-			],
-			[
-				"patent_form",
-				"protected/views/patent/_form.php"
 			]
 		],
 		"width": 0.0
@@ -1637,12 +1259,12 @@
 		"selected_items":
 		[
 			[
-				"",
+				"team",
 				"/D/Dropbox/dev_htdocs/team/team.sublime-project"
 			],
 			[
-				"team",
-				"/D/Dropbox/dev_htdocs/team/team.sublime-project"
+				"",
+				"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.sublime-project"
 			],
 			[
 				"te",
@@ -1654,7 +1276,7 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 217.0,
 	"status_bar_visible": true
 }

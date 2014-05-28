@@ -214,26 +214,26 @@ type&布尔&教师或者学生\\
 description&变长字符串&介绍\\
 }{}
 
-% CREATE TABLE IF NOT EXISTS `tbl_people` (
-%   `id` int(11) NOT NULL AUTO_INCREMENT,
-%   `name` varchar(255) COLLATE utf8_bin NOT NULL,
-%   `name` varchar(255) COLLATE utf8_bin,
-%   `type` tinyint(1),
-%   `description` varchar(255),
-%   PRIMARY KEY (`id`)
+% CREATE TABLE IF NOT EXISTS \textasciigrave tbl_people\textasciigrave  (
+%   \textasciigrave id\textasciigrave  int(11) NOT NULL AUTO_INCREMENT,
+%   \textasciigrave name\textasciigrave  varchar(255) COLLATE utf8_bin NOT NULL,
+%   \textasciigrave name\textasciigrave  varchar(255) COLLATE utf8_bin,
+%   \textasciigrave type\textasciigrave  tinyint(1),
+%   \textasciigrave description\textasciigrave  varchar(255),
+%   PRIMARY KEY (\textasciigrave id\textasciigrave )
 % ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 %
 表~\ref{peopledatabase}~给出了人员数据库表的结构，其中所有类型为变长字符串均的字段均采用MySQL中的“varchar(255)”数据类型,主键id“int(11)”数据类型，type字段采用“tinyint(1)”型数据类型；综合上述各字段数据类型的选择，使用下面的SQL语句，在MySQL数据库中生成人员模块的数据库表。
 
 \noindent
 \ttfamily
-\hlstd{CREATE\ TABLE\ }\hlkwa{IF\ }\hlstd{NOT\ EXISTS\ `tbl\textunderscore people`\ }\hlopt{(}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ }\hlstd{`id`\ }\hlkwb{int}\hlstd{}\hlopt{(}\hlstd{}\hlnum{11}\hlstd{}\hlopt{)\ }\hlstd{NOT\ NULL\ AUTO\textunderscore INCREMENT}\hlopt{,}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ }\hlstd{`name`\ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{)\ }\hlstd{COLLATE\ utf8\textunderscore bin\ NOT\ NULL}\hlopt{,}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ }\hlstd{`name`\ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{)\ }\hlstd{COLLATE\ utf8\textunderscore bin}\hlopt{,}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ }\hlstd{`type`\ }\hlkwd{tinyint}\hlstd{}\hlopt{(}\hlstd{}\hlnum{1}\hlstd{}\hlopt{),}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ }\hlstd{`description`\ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{),}\hspace*{\fill}\\
-\hlstd{}\hlstd{\ \ }\hlstd{PRIMARY\ }\hlkwd{KEY\ }\hlstd{}\hlopt{(}\hlstd{`id`}\hlopt{)}\hspace*{\fill}\\
+\hlstd{CREATE\ TABLE\ }\hlkwa{IF\ }\hlstd{NOT\ EXISTS\ \textasciigrave tbl\textunderscore people\textasciigrave \ }\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{\textasciigrave id\textasciigrave \ }\hlkwb{int}\hlstd{}\hlopt{(}\hlstd{}\hlnum{11}\hlstd{}\hlopt{)\ }\hlstd{NOT\ NULL\ AUTO\textunderscore INCREMENT}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{\textasciigrave name\textasciigrave \ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{)\ }\hlstd{COLLATE\ utf8\textunderscore bin\ NOT\ NULL}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{\textasciigrave name\textasciigrave \ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{)\ }\hlstd{COLLATE\ utf8\textunderscore bin}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{\textasciigrave type\textasciigrave \ }\hlkwd{tinyint}\hlstd{}\hlopt{(}\hlstd{}\hlnum{1}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{\textasciigrave description\textasciigrave \ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{PRIMARY\ }\hlkwd{KEY\ }\hlstd{}\hlopt{(}\hlstd{\textasciigrave id\textasciigrave }\hlopt{)}\hspace*{\fill}\\
 \hlstd{}\hlopt{)\ }\hlstd{ENGINE}\hlopt{=}\hlstd{InnoDB}\hlstd{\ \ }\hlstd{}\hlkwa{DEFAULT\ }\hlstd{CHARSET}\hlopt{=}\hlstd{utf8\ COLLATE}\hlopt{=}\hlstd{utf8\textunderscore bin}\hlopt{;}\hlstd{}\hspace*{\fill}\\
 \mbox{}
 \normalfont
@@ -257,29 +257,29 @@ is\_patent&布尔&是否为专利模块管理员\\
 
 表~\ref{userdatabase}~给出了人员数据库表的结构，其中所有类型为变长字符串均的字段均采用MySQL中的“varchar(255)”数据类型,主键id使用“int(11)”数据类型，类型为布尔的字段采用“tinyint(1)”数据类型；综合上述各字段数据类型的选择，使用下面的SQL语句，在MySQL数据库中生成人员模块的数据库表。
 
-% CREATE TABLE IF NOT EXISTS `tbl_user` (
-%   `id` int(11) NOT NULL AUTO_INCREMENT,
-%   `username` varchar(30) COLLATE utf8_bin NOT NULL,
-%   `password` varchar(255) COLLATE utf8_bin NOT NULL,
-%   `email` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-%   `is_admin` tinyint(1) DEFAULT NULL,
-%   `is_paper` tinyint(1) DEFAULT NULL,
-%   `is_project` tinyint(1) DEFAULT NULL,
-%   `is_patent` tinyint(1) DEFAULT NULL,
-%   PRIMARY KEY (`id`)
+% CREATE TABLE IF NOT EXISTS \textasciigrave tbl_user\textasciigrave  (
+%   \textasciigrave id\textasciigrave  int(11) NOT NULL AUTO_INCREMENT,
+%   \textasciigrave username\textasciigrave  varchar(30) COLLATE utf8_bin NOT NULL,
+%   \textasciigrave password\textasciigrave  varchar(255) COLLATE utf8_bin NOT NULL,
+%   \textasciigrave email\textasciigrave  varchar(100) COLLATE utf8_bin DEFAULT NULL,
+%   \textasciigrave is_admin\textasciigrave  tinyint(1) DEFAULT NULL,
+%   \textasciigrave is_paper\textasciigrave  tinyint(1) DEFAULT NULL,
+%   \textasciigrave is_project\textasciigrave  tinyint(1) DEFAULT NULL,
+%   \textasciigrave is_patent\textasciigrave  tinyint(1) DEFAULT NULL,
+%   PRIMARY KEY (\textasciigrave id\textasciigrave )
 % ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 \noindent
 \ttfamily
-\hlstd{CREATE\ TABLE\ IF\ NOT\ EXISTS\ `tbl\textunderscore user`\ (\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`id`\ int(}\hlnum{11}\hlstd{)\ NOT\ NULL\ AUTO\textunderscore INCREMENT,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`username`\ varchar(}\hlnum{30}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`password`\ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`email`\ varchar(}\hlnum{100}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`is\textunderscore admin`\ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`is\textunderscore paper`\ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`is\textunderscore project`\ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{`is\textunderscore patent`\ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
-}\hlstd{\ \ }\hlstd{PRIMARY\ KEY\ (`id`)\hspace*{\fill}\\
+\hlstd{CREATE\ TABLE\ IF\ NOT\ EXISTS\ \textasciigrave tbl\textunderscore user\textasciigrave \ (\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL\ AUTO\textunderscore INCREMENT,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave username\textasciigrave \ varchar(}\hlnum{30}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave password\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave email\textasciigrave \ varchar(}\hlnum{100}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore admin\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore paper\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore project\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore patent\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{PRIMARY\ KEY\ (\textasciigrave id\textasciigrave )\hspace*{\fill}\\
 )\ ENGINE=InnoDB}\hlstd{\ \ }\hlstd{DEFAULT\ CHARSET=utf8\ COLLATE=utf8\textunderscore bin;}\hspace*{\fill}\\
 \mbox{}
 \normalfont
@@ -347,11 +347,11 @@ execute\textunderscore peoples\textunderscore execute\textunderscore .seq;}\hspa
 \mbox{}
 \normalfont
 \normalsize
-% SELECT `execute_`.`id` AS `t1_c0`, `execute_`.`name` AS
-% `t1_c1` FROM `tbl_people` `execute_`  INNER JOIN
-% `tbl_project_people_execute` `execute_peoples_execute_` ON
-% (`execute_peoples_execute_`.`project_id`=1) AND
-% (`execute_`.`id`=`execute_peoples_execute_`.`people_id`) ORDER BY
+% SELECT \textasciigrave execute_\textasciigrave .\textasciigrave id\textasciigrave  AS \textasciigrave t1_c0\textasciigrave , \textasciigrave execute_\textasciigrave .\textasciigrave name\textasciigrave  AS
+% \textasciigrave t1_c1\textasciigrave  FROM \textasciigrave tbl_people\textasciigrave  \textasciigrave execute_\textasciigrave   INNER JOIN
+% \textasciigrave tbl_project_people_execute\textasciigrave  \textasciigrave execute_peoples_execute_\textasciigrave  ON
+% (\textasciigrave execute_peoples_execute_\textasciigrave .\textasciigrave project_id\textasciigrave =1) AND
+% (\textasciigrave execute_\textasciigrave .\textasciigrave id\textasciigrave =\textasciigrave execute_peoples_execute_\textasciigrave .\textasciigrave people_id\textasciigrave ) ORDER BY
 % execute_peoples_execute_.seq;
 
 如图~\ref{pngprojecter.png}~所示，这是与科研项目有关的实体-关系图（ER图），图中展示了科研项目与实际执行人员的关系、科研项目与责任书人员的关系、学术论文与支柱科研项目的关系以及学术论文与报账科研项目之间的关系。
@@ -865,10 +865,10 @@ CActiveDataProvider~类使用AR的CActiveRecord::findAll()方法， 从数据库
 \normalsize
 \item 科研项目控制器的筛选与查询动作(actionSearch)解析这些查询参数，例化一个科研项目模型的实例,将这些条件添加进去
 \item 模型类根据这些条件生成SQL语句里WHERE字句的条件：\\
-%SELECT * FROM `tbl_project` `t` WHERE ((is_national=1) AND (start_date>'2010-01-01'))
+%SELECT * FROM \textasciigrave tbl_project\textasciigrave  \textasciigrave t\textasciigrave  WHERE ((is_national=1) AND (start_date>'2010-01-01'))
 \noindent
 \ttfamily
-\hlstd{SELECT\ {*}\ FROM\ `tbl\textunderscore project`\ `t`\ WHERE\ ((is\textunderscore national=}\hlnum{1}\hlstd{)\ AND\ (\Righttorque\hspace*{\fill}\\
+\hlstd{SELECT\ {*}\ FROM\ \textasciigrave tbl\textunderscore project\textasciigrave \ \textasciigrave t\textasciigrave \ WHERE\ ((is\textunderscore national=}\hlnum{1}\hlstd{)\ AND\ (\Righttorque\hspace*{\fill}\\
 start\textunderscore date}\hlkwa{$>$}\hlstd{'}\hlnum{2010}\hlstd{{-}}\hlnum{01}\hlstd{{-}}\hlnum{01}\hlstd{'))}\hspace*{\fill}
 \mbox{}
 \normalfont
