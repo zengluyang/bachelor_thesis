@@ -1,1 +1,120 @@
-% !Mode:: "TeX:UTF-8"
+% % !Mode:: "TeX:UTF-8"
+% \chapter{Best MVC Practices}
+\chapter{MVC的最佳实践}
+% Although Model-View-Controller (MVC) is known by nearly every Web developer, how to properly use MVC in real application development still eludes many people. The central idea behind MVC is code reusability and separation of concerns. In this section, we describe some general guidelines on how to better follow MVC when developing a Yii application.
+
+虽然几乎每个~Web~开发者都知道模型-视图-控制器架构， 但是如何在实际的应用开发中使用~MVC~仍然难倒了很多人。蕴含在MVC中的主要思想是代码的可重用性和关注点分离\footnote{译者注：关注点分离（Separation of concerns，SOC）是对只与“特定概念、目标”(关注点)相关联的软件组成部分进行“标识、封装和操纵”的能力，即标识、封装和操纵关注点的能力。是处理复杂性的一个原则。由于关注点混杂在一起会导致复杂性大大增加，所以能够把不同的关注点分离开来，分别处理就是处理复杂性的一个原则，一种方法。}。在本章中，将描述一些在开发~Yii~应用时如何更好地运用MVC的指引。
+
+% To better explain these guidelines, we assume a Web application consists of several sub-applications, such as
+
+为了更好的阐述这些指引，我们假定一个Web应用包括了一个子应用，比如：
+
+\begin{itemize}
+% \item front end: a public-facing website for normal end users;
+\item 前台：一个为普通最终用户所使用公开的网站；
+% back end: a website that exposes administrative functionality for managing the application. This is usually restricted to administrative staff;
+\item 后台：一个提供管理功能的网站。通常只能由管理用户访问；
+% \item Tconsole: an application consisting of console commands to be run in a terminal window or as scheduled jobs to support the whole application;
+\item 控制台：一个又控制台命令构成的应用，在终端窗口中所使用或者以计划任务的方式使用，以一尺整个应用；
+% Web API: providing interfaces to third parties for integrating with the application.
+\item Web API：为第三方程序的整合提供接口。
+\end{itemize}
+%The sub-applications may be implemented in terms of modules, or as a Yii application that shares some code with other sub-applications.
+这些子应用可以以模块的方式实现，或者以与其它子应用Yii应用的方式实现。
+
+
+\section{模型}
+
+% Models represent the underlying data structure of a Web application. Models are often shared among different sub-applications of a Web application. For example, a LoginForm model may be used by both the front end and the back end of an application; a News model may be used by the console commands, Web APIs, and the front/back end of an application. Therefore, models
+
+模型代表支撑Web应用的数据结构。模型通常可以被Web应用不同的子应用间所共用。例如，一个登录表单的模型可以被一个应用前台的前台和后台所使用；一个新闻模型可以被一个应用的控制台、Web API以及前后台所使用。因此，模型应该
+
+\begin{itemize}
+% \item should contain properties to represent specific data;
+\item 包括表示特定数据的属性；
+% \item should contain business logic (e.g. validation rules) to ensure the represented data fulfills the design requirement;
+\item 包括特定业务逻辑（比如说，验证规则）来确保它所表示的数据满足设计要求；
+% \item may contain code for manipulating data. For example, a SearchForm model, besides representing the search input data, may contain a search method to implement the actual search.
+\item 可以包括操作数据的代码。比如说，一个搜索表单模型，除了表示搜索输入数据外，可能包含一个函数实现搜索的功能。
+\end{itemize}
+
+% Sometimes, following the last rule above may make a model very fat, containing too much code in a single class. It may also make the model hard to maintain if the code it contains serves different purposes. For example, a News model may contain a method named getLatestNews which is only used by the front end; it may also contain a method named getDeletedNews which is only used by the back end. This may be fine for an application of small to medium size. For large applications, the following strategy may be used to make models more maintainable:
+
+有时候，遵循上述最后一条规则可能会导致一个模型非常臃肿，在一个类中包含过多的代码。也可能导致这个模型很难维护，如果它完成的很多作用。例如，一个新闻模型可能包含了一个名为getLatestNews（获取最新新闻）的函数，这个函数只在前台使用；它也可能包含一个名为getDeletedNews（获取已删除新闻）的函数，这个函数只被后台所使用。对于一个中小型的网站来说，这还问题不大。但对于大型网站，下列策略会让模型更加易维护：
+
+\begin{itemize}
+% \item Define a NewsBase model class which only contains code shared by different sub-applications (e.g. front end, back end);
+\item 定义一个新闻基类，这个类只包含各个子应用（例如：前台，后台）所共用的代码；
+% \item In each sub-application, define a News model by extending from NewsBase. Place all of the code that is specific to the sub-application in this News model.
+\item 在每个子应用中，通过继承新闻基类，来定义一个新的新闻类，将所有对与各个子应用特定的代码放在里面。
+\end{itemize}
+
+% So, if we were to employ this strategy in our above example, we would add a News model in the front end application that contains only the getLatestNews method, and we would add another News model in the back end application, which contains only the getDeletedNews method.
+
+这样一来，如果把这个策略使用到上面的例子当中，便应该在前台中添加只包括getLatestNews（获取最新新闻）函数的新闻模型类，在后台中添加另外一个只包括getDeletedNews（获取已删除新闻）函数的新闻模型类。
+
+% In general, models should not contain logic that deals directly with end users. More specifically, models
+
+总的来说，模型不应该包括直接与最终用户有关的逻辑。具体地说，模型：
+
+\begin{itemize}
+% \item should not use \$ \_GET, \$ \_POST, or other similar variables that are directly tied to the end-user request. Remember that a model may be used by a totally different sub-application (e.g. unit test, Web API) that may not use these variables to represent user requests. These variables pertaining to the user request should be handled by the Controller.
+\item 不应该使用\$ \_GET, \$ \_POST，或者其它与最终用户请求直接有关的变量。记住模型可能被完全不同的子程序（例如：单元测试，Web API）所使用，这些子程序可能不用这些变量来表示用户请求。这些与最终用户请求有关的变量应该被控制器处理。
+% \item should avoid embedding HTML or other presentational code. Because presentational code varies according to end user requirements (e.g. front end and back end may show the detail of a news in completely different formats), it is better taken care of by views.
+\item 应该避免嵌入HTML或者其他表示层代码。因为表示层的代码会根据最终用户不同的要求所变化（例如，前台和后台可能以完全不同的形式来展示一条新闻的细节），这些表示层代码最好由视图来处理。
+\end{itemize}
+\section{视图}
+
+% Views are responsible for presenting models in the format that end users desire. In general, views
+
+视图负责按照最终用户要求的格式将模型展示出来。中的来说，视图：
+
+\begin{itemize}
+% \item should mainly contain presentational code, such as HTML, and simple PHP code to traverse, format and render data;
+
+\item 应该主要包含表示层代码，比如说HTML，以及简单的PHP代码来遍历、格式化以及渲染数据；
+% \item should avoid containing code that performs explicit DB queries. Such code is better placed in models.
+\item 应该避免包含直接执行数据库查询的代码，这些代码放在模型里更好。
+% \item should avoid direct access to \$ \_GET, \$ \_POST, or other similar variables that represent the end user request. This is the controller's job. The view should be focused on the display and layout of the data provided to it by the controller and/or model, but not attempting to access request variables or the database directly.
+\item 应该不免直接访问 \$ \_GET, \$ \_POST，或者其他表示最终用户请求的类似变量。这是控制器的工作。视图应该主要处理控制器和模型提供的数据，将它们按照特定的格式展示出来，而不是尝试直接访问用户请求变量或者数据库。
+% \item may access properties and methods of controllers and models directly. However, this should be done only for the purpose of presentation.
+\item 可以直接访问模型和控制器的属性与函数。但是，只能在完成表示目的时，执行这些操作。
+\end{itemize}
+
+% Views can be reused in different ways:
+
+视图可以按照一下的方式被重用：
+
+\begin{itemize}
+% \item Layout: common presentational areas (e.g. page header, footer) can be put in a layout view.
+\item 共同的表示区域（例如，页面的头部、尾部）可以被放在一个布局视图里。
+% \item Partial views: use partial views (views that are not decorated by layouts) to reuse fragments of presentational code. For example, we use _form.php partial view to render the model input form that is used in both model creation and updating pages.
+\item 部分视图：使用部分视图（不被布局所装饰的视图）来重用表示层的代码段。不如说，使用~\_form.php~部分视图来渲染增加和修改页面都用到的输入表单。
+% \item Widgets: if a lot of logic is needed to present a partial view, the partial view can be turned into a widget whose class file is the best place to contain this logic. For widgets that generate a lot of HTML markup, it is best to use view files specific to the widget to contain the markup.
+
+\item 控件：如果在渲染一个部分视图时需要很多的逻辑，这个部分视图可以被封装成一个空间，这个控件的类文件是防止这些逻辑代码最好的地方。对于那些需要产生很多HTML标记的空间，最好能够使用对于这些空间来说特定的视图文件来防止这些标记。
+
+% \item Helper classes: in views we often need some code snippets to do tiny tasks such as formatting data or generating HTML tags. Rather than placing this code directly into the view files, a better approach is to place all of these code snippets in a view helper class. Then, just use the helper class in your view files. Yii provides an example of this approach. Yii has a powerful CHtml helper class that can produce commonly used HTML code. Helper classes may be put in an autoloadable directory so that they can be used without explicit class inclusion.
+\item 助手类：在试图中会经常使用到一些代码端来完成一些小的任务，比如说格式化数据或者产生HTML标签。与其直接将这些代码放在视图文件里，一个跟好的方法是将这些代码放在视图助手类里面。~Yii~包含了使用这种方法的例子。Yii有一个强大的CHtml助手类，这个类可以产生常用的HTML代码。助手类可以被放在自动载入的目录里，这样的话他们无需显示的类包含声明便可以被直接使用。
+\end{itemize}
+
+% \section{Controller} 
+\section{控制器} 
+% Controllers are the glue that binds models, views and other components together into a runnable application. Controllers are responsible for dealing directly with end user requests. Therefore, controllers
+
+控制器是将模型、视图以及其他组将绑定为一个可运行应用的胶水。控制器负责直接处理最终用户请求。因此，控制器
+
+\begin{itemize}
+% \item may access \$ \_GET, \$ \_POST and other PHP variables that represent user requests;
+\item 可以访问~\$ \_GET~、~\$ \_POST~以及其它表示用户请求的PHP变量； 
+% \item may create model instances and manage their life cycles. For example, in a typical model update action, the controller may first create the model instance; then populate the model with the user input from \$ \_POST; after saving the model successfully, the controller may redirect the user browser to the model detail page. Note that the actual implementation of saving a model should be located in the model instead of the controller.
+\item 可以创建模型类的实例和管理它们的生命周期。例如，在一个典型的模型修改动作中，控制器可以首先创建模型实例；然后将从~\$ \_POST~中得到的用户输入填入到这个模型实例中；在成功保存了这个模型实例之后，控制器可以将用户的浏览器重定向至这个模型的详细介绍页面。需要注意的是，保存一个模型的实际实现应该放在模型里面，而不是控制器里。
+% \item should avoid containing embedded SQL statements, which are better kept in models.
+\item 应该避免包含直接执行数据库查询的代码，这些代码放在模型里更好;
+% \item should avoid containing any HTML or any other presentational markup. This is better kept in views.
+\item  应该避免嵌入HTML或者其他表示层代码，这些表示层代码最好由视图来处理。
+\end{itemize}
+
+% In a well-designed MVC application, controllers are often very thin, containing probably only a few dozen lines of code; while models are very fat, containing most of the code responsible for representing and manipulating the data. This is because the data structure and business logic represented by models is typically very specific to the particular application, and needs to be heavily customized to meet the specific application requirements; while controller logic often follows a similar pattern across applications and therefore may well be simplified by the underlying framework or the base classes.
+
+在一个设计完善的MVC应用中，控制器通常都很稀薄，仅仅包含数百行代码；模型通常比较臃肿，包含了大部分表示和操作数据的代码。这是因为数据结构和业务逻辑通常是和特定应用的需求紧密联系在一起的；与此不同，控制器的逻辑在不同的应用间通常有着一种类似的模式，因此能够被底层的框架或者基类所简化。
