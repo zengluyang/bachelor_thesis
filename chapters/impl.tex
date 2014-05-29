@@ -10,19 +10,19 @@
 
 在实现本系统之前，需要搭建出第~\pageref{lamp}~页的第~\ref{lamp}~节提出的LAMP服务器环境，然后在此开发环境下进行开发与调试。
 首先安装~Ubuntu 12.04 LTS~操作系统，Ubuntu是一个以桌面应用为主的GNU/Linux操作系统。打开终端，输入
-sudo apt-get install tasksel, 安装tasksel。tasksel是一个Debian下的安装任务套件，如果你为了使你的系统完成某一种常规功能，而需要安装多个软件包时，可以使用它进行方便快捷的安装。安装成功后打开tasksel，如~\ref{tasksel}~所示，选择LAMP Server，一个默认配置的LAMP服务器便搭建配置完毕了。
+sudo apt-get install tasksel, 安装tasksel。tasksel是一个Debian下的安装任务套件，如果你为了使你的系统完成某一种常规功能，而需要安装多个软件包时，可以使用它进行方便快捷的安装。安装成功后打开tasksel，如图~\ref{tasksel}~所示，选择LAMP Server，一个默认配置的LAMP服务器便搭建配置完毕了。
 \pic[hbtp]{利用tasksel工具安装配置LAMP开发服务器}{width=1.0\textwidth}{tasksel}
 此时，在浏览器中访问~http://localhost~就能够打开一个标题为“It works!”的默认网页，说明开发服务器已经正常运行了。 
 
 \subsection{版本控制工具}
 git是一个版本控制系统，用来保留工程源代码历史状态的命令行工具。可以利用它来追踪项目中的文件，并且得到某些时间点提交的项目状态。通过使用git，可以方便地在开发本系统的过程中，任意回溯到源码的不同版本上，提高开发效率，保证了源码库的安全。图~\ref{git}~展示了在开发本系统过程中的部分git日志，其中每个条目代表对代码库的一次提交，可以在不同的提交之间回溯。
 \pic[hbtp]{本系统开发过程中git的部分日志}{width=0.6\textwidth}{git}
-\section{数据库表实现}
+\section{数据库设计与实现}
 \subsection{数据库引擎选择}
 
 InnoDB和MyISAM是MySQL中最常用的两个数据库引擎。~MyISAM~是~MySQL~关系数据库管理系统的默认储存引擎。这种MySQL表存储结构从旧的ISAM代码扩展出许多有用的功能。InnoDB是MySQL的另一个存储引擎，正成为目前MySQL AB所发行新版的标准，被包含在所有二进制安装包里。较之于其它的存储引擎它的优点是它支持兼容ACID的事务（类似于PostgreSQL),以及参数完整性（对外键的约束）。在新版本的MySQL中，InnoDB引擎由于其对事务，参照完整性，以及更高的并发性等优点开始广泛的取代MyISAM。
 
-考虑到在本系统中，需要在各个数据管理模块的数据库表中保存一个维护者字段，在科研项目项目管理模块中为每个科研项目记录保存不定数量的人员，在学术论文管理模块中为每个项目记录保存不定数量的作者，以及在专利管理模块中为每个专利记录保存不定数量的发明人，需要使用到外键和创建额外的关系数据表，详见第页~\pageref{relation}~第~\ref{relation}~节所介绍的数据表关系；考虑到InnoDB对于参数完整性的支持能够很好地保证本系统数据的一致性和完整性,本系统中的所有数据库表选用InnoDB引擎。在MySQL中指定数据库引擎非常简单，只需要在创建数据库表的SQL语句中指定“ENGINE=InnoDB”
+考虑到在本系统中，需要在各个数据管理模块的数据库表中保存一个维护者字段，在科研项目管理模块中为每个科研项目记录保存不定数量的人员，在学术论文管理模块中为每个项目记录保存不定数量的作者，以及在专利管理模块中为每个专利记录保存不定数量的发明人，需要使用到外键和创建额外的关系数据表，详见第页~\pageref{relation}~第~\ref{relation}~节所介绍的数据表关系；考虑到InnoDB对于参数完整性的支持能够很好地保证本系统数据的一致性和完整性,本系统中的所有数据库表选用InnoDB引擎。在MySQL中指定数据库引擎非常简单，只需要在创建数据库表的SQL语句中指定“ENGINE=InnoDB”
 
 \subsection{数据库字符集选择}
 \label{utf8}
@@ -33,7 +33,7 @@ UTF-8（8-bit Unicode Transformation Format）是一种针对Unicode的可变长
 考虑到通用性和易用性，本系统中的所有数据库表选用UTF-8字符集。在MySQL中指定数据库字符集同样非常简单，只需要在创建数据库表的SQL语句中指定“DEFAULT CHARSET=utf8”
 
 
-\subsection{数据库表项实现}
+\subsection{数据库表项设计与实现}
 根据需求分析中提出的各数据管理模块需要实现存储的表项，在MySQL中分别创建了学术论文、专利、科研项目、人员四个数据库表。
 
 \subsubsection{学术论文}
@@ -354,11 +354,11 @@ execute\textunderscore peoples\textunderscore execute\textunderscore .seq;}\hspa
 % (\textasciigrave execute_\textasciigrave .\textasciigrave id\textasciigrave =\textasciigrave execute_peoples_execute_\textasciigrave .\textasciigrave people_id\textasciigrave ) ORDER BY
 % execute_peoples_execute_.seq;
 
-如图~\ref{pngprojecter.png}~所示，这是与科研项目有关的实体-关系图（ER图），图中展示了科研项目与实际执行人员的关系、科研项目与责任书人员的关系、学术论文与支柱科研项目的关系以及学术论文与报账科研项目之间的关系。
+如图~\ref{pngprojecter.png}~所示，这是与科研项目有关的实体-关系图（ER图），图中展示了科研项目与实际执行人员的关系、科研项目与责任书人员的关系、学术论文与资助科研项目的关系以及学术论文与报账科研项目之间的关系。
 
 \pic[H]{与科研项目有关的实体-关系图}{width=1.0\textwidth}{pngprojecter.png}
 
-同样地，在本系统中，还需要分别存储和维护科研项目与责任书人员的关系、学术论文与支柱科研项目的关系、学术论文与报账科研项目之间的关系、科研项目与维护人员的关系、学术论文与作者的关系、学术论文与维护人员的关系、发明和发明人的关系，皆采用类似上述建立一个关系数据库表的方式来实现，限于篇幅关系，在这里不再赘述。
+同样地，在本系统中，还需要分别存储和维护科研项目与责任书人员的关系、学术论文与资助科研项目的关系、学术论文与报账科研项目之间的关系、科研项目与维护人员的关系、学术论文与作者的关系、学术论文与维护人员的关系、发明和发明人的关系，皆采用类似上述建立一个关系数据库表的方式来实现，限于篇幅关系，在这里不再赘述。
 
 \section{MVC开发规范}
 在~Yii~框架中，偏爱规范胜于配置。遵循规范可使你能够创建成熟的Yii应用而不需要编写、维护复杂的配置。 
@@ -769,7 +769,7 @@ CActiveDataProvider~类使用AR的CActiveRecord::findAll()方法， 从数据库
 \addsubpic{较小屏幕上自适应为单栏显示}{width=0.2\textwidth}{pngcreatemobile.png}
 \end{pics}
 
-另外指的提到的是，在逐个录入科研项目的过程中，用户需要选择科研项目的参与人员，此时如果仅仅显示一个下拉菜单供用户进行人员的选择，由于人员较多，选择起来不方便容易出错。因此，如图~\ref{pngselect2.png}~所示，在录入界面人员输入窗口，实现了一个输入与下拉菜单相结合的输入控件，用户可以直接进行选择，也可通过拼音首字母，缩小选择的范围，快速、方便、人性化地进行录入。
+另外指的提到的是，在逐个录入科研项目的过程中，用户需要选择科研项目的参与人员，此时如果仅仅显示一个下拉菜单供用户进行人员的选择，由于人员较多，选择起来不方便且容易出错。因此，如图~\ref{pngselect2.png}~所示，在录入界面人员输入窗口，实现了一个输入与下拉菜单相结合的输入控件，用户可以直接进行选择，也可通过拼音首字母，缩小选择的范围，快速、方便、人性化地进行录入。
 
 \pic[htbp]{人性化的录入界面}{width=0.8\textwidth}{pngselect2.png}
 
@@ -792,13 +792,13 @@ CActiveDataProvider~类使用AR的CActiveRecord::findAll()方法， 从数据库
 
 对外显示：如图~\ref{pngindex.png}~所示，采用表格的形式对角色为游客的用户进行显示。对外显示界面的实现分别放在~WebRoot/protected/views/projects~目录中的~index.php~中
 
-\pic[htbp]{对外显示界面}{width=1.0\textwidth}{pngindex.png}
+\pic[H]{对外显示界面}{width=1.0\textwidth}{pngindex.png}
 
 对内显示：如图~\ref{pngindex.png}~，即通过上一节中所实现的管理页面对角色为超级管理员、科研项目模块管理员的用户进行显示，在每一条科研项目条目，提供三个按钮，分别对应查看其详细内容、进行修改、进行删除，如图~\ref{pngview.png}~所示。对内显示界面的实现分别放在~WebRoot/protected/views/projects~目录中的~admin.php~中
 
 
 
-\pic[htbp]{对内显示界面}{width=1.0\textwidth}{pngview.png}
+\pic[H]{对内显示界面}{width=1.0\textwidth}{pngview.png}
 
 \section{控制器层实现}
 
@@ -849,7 +849,7 @@ CActiveDataProvider~类使用AR的CActiveRecord::findAll()方法， 从数据库
 \item 将这个CActiveDataProvider类的实例传递给视图层，视图层调用这个实例的~getData~方法，返回所有满足步骤2中筛选条件的研项目模型类的实例，并将它们显示出来。
 \end{enumerate}
 
-本系统实现了单个条件以及组合条件进行筛选与查询，例如按日期、按维护人员、按参与者、按时间、按级别等等进行搜索与查询，或者按以上一个条件的组合进行查询。下面以按时间以及级别筛选为例，给出筛选功能的实现，其它条件的实现类似，在这里不再赘述。
+本系统实现了单个条件以及组合条件进行筛选与查询，例如按日期、按维护人员、按参与者、按时间、按级别等等进行搜索与查询，或者按以上几个条件的组合进行查询。下面以按时间以及级别筛选为例，给出筛选功能的实现，其它条件的实现类似，在这里不再赘述。
 
 \begin{enumerate}
 \item 如图~\ref{pngprojectsearchimpl.png}~所示，用户希望筛选2010年以后，级别为国家级的项目
@@ -881,3 +881,6 @@ start\textunderscore date}\hlkwa{$>$}\hlstd{'}\hlnum{2010}\hlstd{{-}}\hlnum{01}\
 \pic[H]{多条件筛选结果}{width=1.0\textwidth}{pngprojectsearchimplresult.png}
 
 %pngprojectsearchimplresult.png
+
+% \section{本章小结}
+% 在本章中，给出了实现本系统详细设计与实现的过程，阐述了开发环境的搭建和配置、数据库的设计与实现、视图层的设计与实现以及模型层的设计与实现。

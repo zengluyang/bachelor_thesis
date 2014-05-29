@@ -4,11 +4,11 @@
 本章主要介绍在本系统的设计与实现过程用会用到的一些技术、软件工具以及设计模式。
 \section{B/S结构}
 
-B/S（Browser/Server）结构\citeup{shuchun2000design}即浏览器和服务器结构。它是随着Internet技术的兴起，对C/S结构的一种变化或者改进的结构。在这种结构下，用户工作界面是通过WWW浏览器来实现，极少部分事务逻辑在前端（Browser）实现，但是主要事务逻辑在服务器端（Server）实现，形成所谓三层结构。
+\gls{B/S}结构\citeup{shuchun2000design}即浏览器和服务器结构。它是随着Internet技术的兴起，对\gls{C/S}结构的一种变化或者改进的结构。在这种结构下，用户工作界面是通过WWW浏览器来实现，极少部分事务逻辑在前端（Browser）实现，但是主要事务逻辑在服务器端（Server）实现，形成所谓三层结构。
 
 \section{AJAX技术}
 
-AJAX即“Asynchronous JavaScript and XML”（异步的JavaScript与XML技术），指的是一套综合了多项技术的浏览器端网页开发技术。Ajax的概念由Jesse James Garrett所提出\citeup{garrett2005ajax}。
+\gls{AJAX},即“Asynchronous JavaScript and \gls{XML}”（异步的JavaScript与XML技术），指的是一套综合了多项技术的浏览器端网页开发技术。AJAX的概念由Jesse James Garrett所提出\citeup{garrett2005ajax}。
 
 传统的Web应用允许用户端填写表单（form），当提交表单时就向Web服务器发送一个请求。服务器接收并处理传来的表单，然后送回一个新的网页，但这个做法浪费了许多带宽，因为在前后两个页面中的大部分HTML码往往是相同的。由于每次应用的沟通都需要向服务器发送请求，应用的回应时间依赖于服务器的回应时间。这导致了用户界面的回应比本机应用慢得多。
 
@@ -34,7 +34,7 @@ AJAX即“Asynchronous JavaScript and XML”（异步的JavaScript与XML技术�
 \section{LAMP}
 
 \label{lamp}
-LAMP是指一组通常一起使用来运行动态网站或者服务器的自由软件名称首字母缩写：
+\gls{LAMP}是指一组通常一起使用来运行动态网站或者服务器的自由软件名称首字母缩写：
 
 \begin{enumerate}
 \item Linux，操作系统
@@ -49,19 +49,19 @@ Linux作为本系统服务器的操作系统，主要有开源免费、良好的
 
 Linux 内核源代码可以免费下载。大多数 Linux 发布版本，包括 GNU/Linux 的发行版本和商业的发行版本几乎都提供免费下载服务。免费意味着零试用成本，也不需要为安装在第二台机器上付费。
 
-Linux 作为服务器的优势是，他目前具有最好的生态系统，服务器端的各种软件都为它而设计，默认都认为你是在 Linux上运行，Apache、MySQL等软件随能够在Windows下运行，但是性能却显著地比在Linux下运行时低\citeup{ramana2005some}。
+Linux 作为服务器的优势是，它目前具有最好的生态系统，服务器端的各种软件都为它而设计，默认都认为你是在 Linux上运行，Apache、MySQL等软件随能够在Windows下运行，但是性能却显著地比在Linux下运行时低\citeup{ramana2005some}。
 
 \subsection{网页服务器 Apache}
 Apache HTTP Server（简称Apache）是Apache软件基金会的一个开放源代码的网页服务器，可以在大多数计算机操作系统中运行，由于其跨平台和安全性被广泛使用，是最 流行的Web服务器端软件之一\citeup{apache}。它快速、可靠并且可通过简单的API扩充，将Perl、PHP、Python等解释器编译到服务器中。
 \subsection{数据库管理系统 MySQL}
-MySQL是一个开放源代码的关系数据库管理系统（RDBMS），MySQL性能高、成本低、可靠性好，已经成为最流行的开源数据库，因此被广泛地应用在Internet上的中小型网站中。
+MySQL是一个开放源代码的\gls{RDBMS}，即关系数据库管理系统，MySQL性能高、成本低、可靠性好，已经成为最流行的开源数据库，因此被广泛地应用在Internet上的中小型网站中。
 \subsection{脚本语言 PHP}
-PHP（全称：PHP：Hypertext Preprocessor，即“PHP：超文本预处理器”）是一种开源的通用计算机脚本语言，尤其适用于网络开发并可嵌入HTML中使用\citeup{php}。PHP的语法借鉴吸收了C语言、Java和Perl等流行计算机语言的特点，易于一般程序员学习。PHP的主要目标是允许网络开发人员快速编写动态页面，但PHP也被用于其他很多领域。
+\gls{PHP}，即“PHP：超文本预处理器”，是一种开源的通用计算机脚本语言，尤其适用于网络开发并可嵌入HTML中使用\citeup{php}。PHP的语法借鉴吸收了C语言、Java和Perl等流行计算机语言的特点，易于一般程序员学习。PHP的主要目标是允许网络开发人员快速编写动态页面，但PHP也被用于其他很多领域。
 \subsubsection{PHP框架}
 
 PHP框架提供了一个用以构建web应用的基本框架，从而简化了用PHP编写web应用程序的流程。换言之，PHP框架有助于促进快速应用开发，不但节省开发时间、有助于建立更稳定的应用，而且减少了重复编码的开发。通过确保适当的数据库交换和在表现层编码，框架还可以帮助初学者建立更稳定的应用服务。这可以让你花更多的时间去创建实际的Web应用程序，而不是花时间写重复的代码。
 
-PHP框架的作用相当于模型-视图-控制器（Model View Controller）。MVC是种编程的架构模式，将业务逻辑从UI中分离出来，允许一个一个单独修改（也称为关注点分离）。在MVC中，Model指数据，View指表现层，Controller则指应用程序或业务逻辑。基本上， MVC打破了一个应用的开发进程，这样各组件就可以不受影响地各自工作。从本质上讲，这使得用PHP编码更快更简单。
+PHP框架的作用相当于\gls{MVC}。MVC是种编程的架构模式，将业务逻辑从UI中分离出来，允许一个一个单独修改（也称为关注点分离）。在MVC中，Model指数据，View指表现层，Controller则指应用程序或业务逻辑。基本上， MVC打破了一个应用的开发进程，这样各组件就可以不受影响地各自工作。从本质上讲，这使得用PHP编码更快更简单。
 
 \subsubsection{Yii框架}
 
@@ -74,7 +74,7 @@ Yii 是一个基于组件、用于开发大型 Web 应用的高性能 PHP 框架
 \end{enumerate}
 
 \section{HTTP协议}
-在本系统中，使用了HTTP协议的GET方法和POST方法中的查询字符串（Query String）来完成递客户端与服务端的数据交互，在此对这些概念作简要的介绍。
+在本系统中，使用了\gls{HTTP}的GET方法和POST方法中的查询字符串（Query String）来完成递客户端与服务端的数据交互，在此对这些概念作简要的介绍。
 
 超文本传输协议（HTTP）的设计目的是保证客户机与服务器之间的通信。HTTP 的工作方式是客户机与服务器之间的请求-应答协议\cite{fielding1999rfc}。
 
@@ -86,3 +86,6 @@ POST index.php HTTP/1.1\\
 Host: example.com\\
 name1=value1\&name2=value2\\
 \end{itemize}
+
+% \section{本章小结}
+% 在本章中，主要介绍了在本系统的设计与实现用到的B/S结构、AJAX技术、面向对象程序设计方法、LAMP体系以及HTTP协议，完成了本系统设计过程中的技术选型。
