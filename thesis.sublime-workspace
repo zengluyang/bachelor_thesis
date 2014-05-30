@@ -4,12 +4,37 @@
 		"selected_items":
 		[
 			[
+<<<<<<< HEAD
 				"s",
 				"sans-serif  (value)"
 			],
 			[
 				"font",
 				"font-family"
+=======
+				"align",
+				"vertical-align:   (property)"
+			],
+			[
+				"pad",
+				"padding-top:   (property)"
+			],
+			[
+				"font",
+				"font-family:   (property)"
+			],
+			[
+				"back",
+				"background-color:   (property)"
+			],
+			[
+				"is_fi",
+				"is_first_grade"
+			],
+			[
+				"s",
+				"sans-serif  (value)"
+>>>>>>> lost_changes
 			],
 			[
 				"cont",
@@ -228,6 +253,7 @@
 	"buffers":
 	[
 		{
+<<<<<<< HEAD
 			"file": "contents/Eabstract.tex",
 			"settings":
 			{
@@ -240,14 +266,27 @@
 			"settings":
 			{
 				"buffer_size": 103,
+=======
+			"file": "chapters/test.tex",
+			"settings":
+			{
+				"buffer_size": 5852,
+>>>>>>> lost_changes
 				"line_ending": "Unix"
 			}
 		},
 		{
+<<<<<<< HEAD
 			"file": "chapters/demand.tex",
 			"settings":
 			{
 				"buffer_size": 5829,
+=======
+			"file": "thesis.tex",
+			"settings":
+			{
+				"buffer_size": 371,
+>>>>>>> lost_changes
 				"line_ending": "Unix"
 			}
 		},
@@ -255,6 +294,7 @@
 			"file": "chapters/scheme.tex",
 			"settings":
 			{
+<<<<<<< HEAD
 				"buffer_size": 1757,
 				"line_ending": "Unix"
 			}
@@ -272,11 +312,18 @@
 			"settings":
 			{
 				"buffer_size": 148,
+=======
+				"buffer_size": 5807,
+>>>>>>> lost_changes
 				"line_ending": "Unix"
 			}
 		}
 	],
+<<<<<<< HEAD
 	"build_system": "",
+=======
+	"build_system": "pdflatex",
+>>>>>>> lost_changes
 	"command_palette":
 	{
 		"height": 392.0,
@@ -380,6 +427,7 @@
 	},
 	"file_history":
 	[
+<<<<<<< HEAD
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/demand.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/original.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/translation.tex",
@@ -387,11 +435,63 @@
 		"/D/Dropbox/dev_htdocs/team/protected/data/schema.mysql.sql",
 		"/D/Dropbox/dev_htdocs/team/protected/models/Project.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/view.php",
+=======
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/impl.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/scheme.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/demand.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/foundation.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/intro.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.tex",
+		"/d/Desktop/EnglishAbstract.txt",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Eabstract.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/acronym.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Cabstract.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/original.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/reference.bib",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/acknowledgements.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/acr.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/test.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/ending.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/appendix.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/packagecheck.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.sublime-workspace",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/uestcthesis.bst",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/uestcthesis.cls",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.sublime-project",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/pics/add_rect.py",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/math.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/tuition.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/论文_曾路洋.pdf",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/titlepage.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/translation.tex",
+		"/D/Dropbox/dev_htdocs/team/protected/tests/functional/SiteTest.php",
+		"/D/Dropbox/dev_htdocs/team/protected/tests/ab_n_1000.txt",
+		"/D/Dropbox/dev_htdocs/team/protected/tests/ab_n_1000_c_200.txt",
+		"/D/Documents/Tencent Files/449552565/FileRecv/sound0.wav",
+		"/D/Documents/Tencent Files/449552565/FileRecv/sound_0.dat",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/compile.bat",
+		"/D/Dropbox/dev_htdocs/team/protected/controllers/ProjectController.php",
+		"/D/Dropbox/dev_htdocs/team/protected/controllers/PeopleController.php",
+		"/D/Dropbox/dev_htdocs/team/protected/views/project/_form.php",
+		"/D/Dropbox/dev_htdocs/team/protected/models/Project.php",
+		"/D/Dropbox/dev_htdocs/team/protected/models/Paper.php",
+		"/D/Dropbox/dev_htdocs/team/protected/views/paper/_form.php",
+		"/D/Dropbox/dev_htdocs/team/protected/views/paper/_search.php",
+		"/D/Dropbox/dev_htdocs/team/protected/views/paper/view.php",
+		"/D/Dropbox/dev_htdocs/team/themes/foundation4/views/site/index.php",
+		"/D/Dropbox/dev_htdocs/team/themes/foundation4/views/layouts/main.php",
+		"/D/Dropbox/dev_htdocs/team/protected/config/main.php",
+		"/D/Dropbox/dev_htdocs/team/protected/README",
+		"/D/Dropbox/dev_htdocs/team/protected/data/schema.mysql.sql",
+>>>>>>> lost_changes
 		"/D/Dropbox/dev_htdocs/team/protected/views/project/view.php",
 		"/D/Dropbox/dev_htdocs/team/protected/models/PaperProjectFund.php",
 		"/D/Dropbox/dev_htdocs/team/protected/controllers/PaperController.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/create.php",
+<<<<<<< HEAD
 		"/D/Dropbox/dev_htdocs/team/protected/config/main.php",
+=======
+>>>>>>> lost_changes
 		"/D/Dropbox/dev_htdocs/team/team.sublime-project",
 		"/D/Dropbox/dev_htdocs/team/team.sublime-workspace",
 		"/D/Dropbox/dev_htdocs/team/yii/framework/db/schema/CDbCommandBuilder.php",
@@ -400,6 +500,7 @@
 		"/D/Dropbox/dev_htdocs/team/yii/framework/db/ar/CActiveRecord.php",
 		"/D/Dropbox/dev_htdocs/team/yii/framework/db/ar/CActiveFinder.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/project/admin.php",
+<<<<<<< HEAD
 		"/D/Dropbox/dev_htdocs/team/protected/controllers/ProjectController.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/project/create.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/project/_form.php",
@@ -409,6 +510,11 @@
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/_search.php",
 		"/D/Dropbox/dev_htdocs/team/themes/foundation4/views/site/index.php",
 		"/D/Dropbox/dev_htdocs/team/themes/foundation4/views/layouts/main.php",
+=======
+		"/D/Dropbox/dev_htdocs/team/protected/views/project/create.php",
+		"/D/Dropbox/dev_htdocs/team/protected/views/project/_search.php",
+		"/d/Desktop/Ad Hoc/aaa.py",
+>>>>>>> lost_changes
 		"/D/Dropbox/dev_htdocs/team/protected/controllers/SiteController.php",
 		"/D/Dropbox/dev_htdocs/team/yii/framework/messages/config.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/site/index.php",
@@ -417,7 +523,10 @@
 		"/D/Dropbox/dev_htdocs/team/themes/foundation4/views/layouts/column2.php",
 		"/d/Desktop/test.xml",
 		"/D/Dropbox/dev_htdocs/team/yii/framework/web/auth/CWebUser.php",
+<<<<<<< HEAD
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/_form.php",
+=======
+>>>>>>> lost_changes
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/admin.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/index.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/paper/update.php",
@@ -429,7 +538,10 @@
 		"/D/Dropbox/dev_htdocs/team/protected/views/site/teacher.php",
 		"/D/Dropbox/dev_htdocs/team/protected/views/patent/index.php",
 		"/D/cygwin/home/ZLY/test_virtual_func.cpp",
+<<<<<<< HEAD
 		"/D/Dropbox/dev_htdocs/team/protected/models/Paper.php",
+=======
+>>>>>>> lost_changes
 		"/D/Dropbox/dev_htdocs/team/js/pinyin.js",
 		"/D/Dropbox/dev_htdocs/team/protected/views/patent/_form.php",
 		"/D/Dropbox/dev_htdocs/team/protected/models/Patent.php",
@@ -476,6 +588,7 @@
 		"/home/zly/.config/sublime-text-2/Packages/AdvancedNewFile/README.md",
 		"/home/zly/.config/sublime-text-2/Packages/AdvancedNewFile/Default (Linux).sublime-keymap",
 		"/home/zly/Desktop/digit.csc",
+<<<<<<< HEAD
 		"/D/Desktop/digit_stupid_broadcast/RadioToLedsC.nc",
 		"/D/Dropbox/coding/setting/Sublime Text 2/windows/Packages/User/gcc.sublime-build",
 		"/D/Dropbox/coding/setting/Sublime Text 2/windows/Packages/User/necC.sublime-build",
@@ -508,6 +621,9 @@
 		"/E/xampp/htdocs/boiler/www/css/style.css",
 		"/E/xampp/htdocs/boiler/app/controllers/SiteController.php",
 		"/E/xampp/htdocs/boiler/composer.json"
+=======
+		"/D/Desktop/digit_stupid_broadcast/RadioToLedsC.nc"
+>>>>>>> lost_changes
 	],
 	"find":
 	{
@@ -515,9 +631,21 @@
 	},
 	"find_in_files":
 	{
+<<<<<<< HEAD
 		"height": 0.0,
 		"where_history":
 		[
+=======
+		"height": 90.0,
+		"where_history":
+		[
+			"*.tex",
+			"*.pdf",
+			"",
+			"ack*.tex",
+			"*.tex",
+			"impl.tex",
+>>>>>>> lost_changes
 			""
 		]
 	},
@@ -526,8 +654,89 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+<<<<<<< HEAD
 			"支助",
 			"SCI",
+=======
+			"筛选与",
+			"Ajax",
+			"显示",
+			"technology",
+			"AJAX",
+			"C/S",
+			"B/S",
+			"RDBMS",
+			"C/S",
+			"MVC",
+			"支柱",
+			"perf",
+			"yiiperf",
+			"高性能键值服务器",
+			"`",
+			"\\}",
+			"\\{",
+			"\\textunderscore ",
+			"$>$",
+			"$<$",
+			"\\textunderscore",
+			"$>$",
+			"$<$",
+			"`",
+			"\\}",
+			"\\{",
+			"\\textunderscore ",
+			"$\\sim $",
+			"$>$",
+			"$<$",
+			"$\\sim $",
+			"$>$",
+			"$<$",
+			"$\\backslash $",
+			"\\textbar ",
+			"\\textasciicircum",
+			"吞吐量",
+			"学术论文",
+			"论文",
+			"section",
+			"chapter",
+			"介绍",
+			"from",
+			"pic",
+			"three",
+			"科研项目",
+			"@TODO",
+			"实际执行",
+			"update",
+			"@TODO",
+			"mis",
+			"方法，返回所有满足步骤2中筛选条件的研项目模型类的实例，并将它们显示出来。",
+			"录入功能程序流程图",
+			"批量录入功能程序流程图",
+			"@TODO",
+			"Post",
+			"post",
+			"我们",
+			"5249 4646",
+			"52",
+			"5249",
+			"5249 4646",
+			"专利",
+			"patent",
+			"title",
+			"Post",
+			"post",
+			"`",
+			"@TODO",
+			"\\textasciigrave ",
+			"`",
+			"·",
+			"_",
+			"columns medium-4",
+			"fund_id",
+			"is_intl",
+			"is_first_grade",
+			"peoples",
+>>>>>>> lost_changes
 			"projectPeople",
 			"_joinTree",
 			"query",
@@ -577,6 +786,7 @@
 			"medium-1",
 			"row",
 			"textField",
+<<<<<<< HEAD
 			"row",
 			")",
 			"attributeLabels",
@@ -644,6 +854,9 @@
 			");\n",
 			"Mon",
 			"data"
+=======
+			"row"
+>>>>>>> lost_changes
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -651,7 +864,39 @@
 		"regex": false,
 		"replace_history":
 		[
+<<<<<<< HEAD
 			"支柱",
+=======
+			"资助",
+			"\\textasciigrave ",
+			"\\symbol {125}",
+			"\\symbol {123}",
+			"\\symbol {95}",
+			"\\symbol {62}",
+			"\\symbol {60}",
+			"\\symbol {95}",
+			"\\symbol {62}",
+			"\\symbol {60}",
+			"",
+			"\\textasciigrave",
+			"\\symbol {125}",
+			"\\symbol {123}",
+			"\\symbol {95}",
+			"\\symbol {126}",
+			"\\symbol {62}",
+			"\\symbol {60}",
+			"\\symbol {126}",
+			"\\symbol {62}",
+			"\\symbol {60}",
+			"\\symbol {92}",
+			"\\symbol {124}",
+			"\\^{}",
+			"并发请求数",
+			"论文",
+			"学术论文",
+			"\\textasciigrave ",
+			"\\textasciigrave",
+>>>>>>> lost_changes
 			"project"
 		],
 		"reverse": false,
@@ -663,23 +908,39 @@
 	"groups":
 	[
 		{
+<<<<<<< HEAD
 			"selected": 5,
+=======
+			"selected": 1,
+>>>>>>> lost_changes
 			"sheets":
 			[
 				{
 					"buffer": 0,
+<<<<<<< HEAD
 					"file": "contents/Eabstract.tex",
 					"settings":
 					{
 						"buffer_size": 164,
+=======
+					"file": "chapters/test.tex",
+					"settings":
+					{
+						"buffer_size": 5852,
+>>>>>>> lost_changes
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
+<<<<<<< HEAD
 								164,
 								164
+=======
+								5813,
+								5813
+>>>>>>> lost_changes
 							]
 						],
 						"settings":
@@ -791,29 +1052,46 @@
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
+<<<<<<< HEAD
 						"translation.y": 0.0,
+=======
+						"translation.y": 3762.0,
+>>>>>>> lost_changes
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+<<<<<<< HEAD
 					"file": "contents/Cabstract.tex",
 					"settings":
 					{
 						"buffer_size": 103,
+=======
+					"file": "thesis.tex",
+					"settings":
+					{
+						"buffer_size": 371,
+>>>>>>> lost_changes
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
+<<<<<<< HEAD
 								103,
 								0
+=======
+								305,
+								305
+>>>>>>> lost_changes
 							]
 						],
 						"settings":
 						{
+<<<<<<< HEAD
 							"codeintel": true,
 							"codeintel_config":
 							{
@@ -918,6 +1196,8 @@
 							},
 							"codeintel_tooltips": "popup",
 							"sublime_auto_complete": true,
+=======
+>>>>>>> lost_changes
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
@@ -928,18 +1208,30 @@
 				},
 				{
 					"buffer": 2,
+<<<<<<< HEAD
 					"file": "chapters/demand.tex",
 					"settings":
 					{
 						"buffer_size": 5829,
+=======
+					"file": "chapters/scheme.tex",
+					"settings":
+					{
+						"buffer_size": 5807,
+>>>>>>> lost_changes
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
+<<<<<<< HEAD
 								4541,
 								4541
+=======
+								4135,
+								4135
+>>>>>>> lost_changes
 							]
 						],
 						"settings":
@@ -1051,6 +1343,7 @@
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
+<<<<<<< HEAD
 						"translation.y": 3132.0,
 						"zoom_level": 1.0
 					},
@@ -1444,6 +1737,9 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+=======
+						"translation.y": 2358.0,
+>>>>>>> lost_changes
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1501,12 +1797,166 @@
 		"selected_items":
 		[
 			[
+<<<<<<< HEAD
 				"sc",
 				"chapters/scheme.tex"
 			],
 			[
+=======
+				"sche",
+				"chapters/scheme.tex"
+			],
+			[
+				"de",
+				"chapters/demand.tex"
+			],
+			[
+				"found",
+				"chapters/foundation.tex"
+			],
+			[
+				"fon",
+				"chapters/foundation.tex"
+			],
+			[
+				"ea",
+				"contents/Eabstract.tex"
+			],
+			[
+				"imp",
+				"chapters/impl.tex"
+			],
+			[
+				"the",
+				"thesis.tex"
+			],
+			[
+				"intro",
+				"chapters/intro.tex"
+			],
+			[
+				"ack",
+				"contents/acknowledgements.tex"
+			],
+			[
+				"eab",
+				"contents/Eabstract.tex"
+			],
+			[
+				"cab",
+				"contents/Cabstract.tex"
+			],
+			[
+				"bib",
+				"contents/reference.bib"
+			],
+			[
+				"or",
+				"contents/original.tex"
+			],
+			[
+				"test",
+				"chapters/test.tex"
+			],
+			[
+				"ending",
+				"chapters/ending.tex"
+			],
+			[
+				"impl",
+				"chapters/impl.tex"
+			],
+			[
+				"add",
+				"pics/add_rect.py"
+			],
+			[
+>>>>>>> lost_changes
 				"dema",
 				"chapters/demand.tex"
+			],
+			[
+<<<<<<< HEAD
+				".sql",
+				"protected/data/schema.mysql.sql"
+			],
+			[
+				"confi",
+				"protected/config/main.php"
+=======
+				"demand",
+				"chapters/demand.tex"
+			],
+			[
+				"app",
+				"contents/appendix.tex"
+			],
+			[
+				"sch",
+				"chapters/scheme.tex"
+			],
+			[
+				"",
+				"chapters/impl.tex"
+			],
+			[
+				"deman",
+				"chapters/demand.tex"
+			],
+			[
+				"fi",
+				"chapters/foundation.tex"
+			],
+			[
+				"te",
+				"chapters/test.tex"
+			],
+			[
+				"foundation",
+				"chapters/foundation.tex"
+			],
+			[
+				"ap",
+				"contents/appendix.tex"
+			],
+			[
+				"read",
+				"protected/README"
+			],
+			[
+				"sitein",
+				"themes/foundation4/views/site/index.php"
+>>>>>>> lost_changes
+			],
+			[
+				"main",
+				"themes/foundation4/views/layouts/main.php"
+			],
+			[
+<<<<<<< HEAD
+=======
+				"paperc",
+				"protected/controllers/PaperController.php"
+			],
+			[
+				"paper",
+				"protected/models/Paper.php"
+			],
+			[
+				"pe",
+				"protected/controllers/PeopleController.php"
+			],
+			[
+				"projec",
+				"protected/controllers/ProjectController.php"
+			],
+			[
+				"pro",
+				"protected/models/Project.php"
+			],
+			[
+				"project_s",
+				"protected/views/project/_search.php"
 			],
 			[
 				".sql",
@@ -1517,10 +1967,7 @@
 				"protected/config/main.php"
 			],
 			[
-				"main",
-				"themes/foundation4/views/layouts/main.php"
-			],
-			[
+>>>>>>> lost_changes
 				"siteindex",
 				"themes/foundation4/views/site/index.php"
 			],
@@ -1533,10 +1980,13 @@
 				"protected/views/paper/_search.php"
 			],
 			[
+<<<<<<< HEAD
 				"read",
 				"protected/README"
 			],
 			[
+=======
+>>>>>>> lost_changes
 				"project",
 				"protected/models/Project.php"
 			],
@@ -1545,10 +1995,13 @@
 				"protected/controllers/ProjectController.php"
 			],
 			[
+<<<<<<< HEAD
 				"paper",
 				"protected/controllers/PaperController.php"
 			],
 			[
+=======
+>>>>>>> lost_changes
 				"paper_f",
 				"protected/views/paper/_form.php"
 			],
@@ -1601,10 +2054,13 @@
 				"yii/framework/db/schema/CDbSchema.php"
 			],
 			[
+<<<<<<< HEAD
 				"paperc",
 				"protected/controllers/PaperController.php"
 			],
 			[
+=======
+>>>>>>> lost_changes
 				"paper.p",
 				"protected/models/Paper.php"
 			],
@@ -1697,10 +2153,13 @@
 				"themes/foundation4/views/site/index.php"
 			],
 			[
+<<<<<<< HEAD
 				"sitein",
 				"protected/views/site/index.php"
 			],
 			[
+=======
+>>>>>>> lost_changes
 				"viewpaper",
 				"protected/views/paper/_search.php"
 			],
@@ -1725,10 +2184,13 @@
 				"themes/foundation4/views/site/index.php"
 			],
 			[
+<<<<<<< HEAD
 				"pro",
 				"protected/models/Project.php"
 			],
 			[
+=======
+>>>>>>> lost_changes
 				"index",
 				"index.php"
 			],
@@ -1777,10 +2239,13 @@
 				"protected/views/project/view.php"
 			],
 			[
+<<<<<<< HEAD
 				"projec",
 				"protected/controllers/ProjectController.php"
 			],
 			[
+=======
+>>>>>>> lost_changes
 				"patent",
 				"protected/models/Patent.php"
 			],
@@ -1903,6 +2368,7 @@
 			[
 				"viewproje",
 				"protected/views/project/view.php"
+<<<<<<< HEAD
 			],
 			[
 				"projecon",
@@ -2011,6 +2477,8 @@
 			[
 				"paperind",
 				"protected/views/paper/index.php"
+=======
+>>>>>>> lost_changes
 			]
 		],
 		"width": 0.0
@@ -2021,7 +2489,19 @@
 		"selected_items":
 		[
 			[
+<<<<<<< HEAD
 				"",
+=======
+				"team",
+				"/D/Dropbox/dev_htdocs/team/team.sublime-project"
+			],
+			[
+				"",
+				"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.sublime-project"
+			],
+			[
+				"te",
+>>>>>>> lost_changes
 				"/D/Dropbox/dev_htdocs/team/team.sublime-project"
 			]
 		],
@@ -2030,7 +2510,11 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
+<<<<<<< HEAD
 	"side_bar_visible": false,
+=======
+	"side_bar_visible": true,
+>>>>>>> lost_changes
 	"side_bar_width": 217.0,
 	"status_bar_visible": true
 }

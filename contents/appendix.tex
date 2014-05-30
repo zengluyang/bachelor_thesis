@@ -1,2 +1,1021 @@
 % !Mode:: "TeX:UTF-8"
+\chapter{科研项目批量录入文件格式}
+\label{projectimportformat}
+\pic[H]{科研项目批量录入Excel文件的格式}{width=1.0\textwidth}{pngprojectimportformat.png}
+如图~\ref{pngprojectimportformat.png}~所示，这个录入表格表项很多，有以下表项：
+\begin{enumerate}
+\item 项目名称
+\item 经费本编号
+\item 是否国际
+\item 国家级
+\item 省部级
+\item 市级
+\item 校级
+\item 横向
+\item 国家自然基金
+\item 973
+\item 863
+\item 科技支撑计划
+\item 教育部高校博士点基金
+\item 重大专项
+\item XX项目
+\item 开始时间
+\item 截止时间
+\item 结题时间
+\item 申报时间
+\item 立项时间
+\item 申报经费
+\item 立项经费
+\item 实际执行人员1——实际执行人员20
+\item 责任书人员1——责任书人员20
+\end{enumerate}
 
+\chapter{科研项目管理模块部分源代码}
+\section{模型类：Project.php}
+\noindent
+\ttfamily
+\hlstd{}\hllin{\ 1\ }\hlopt{\symbol {60}}\hlstd{?php}\\
+\hllin{\ 2\ }\\
+\hllin{\ 3\ }\hlcom{/{*}{*}}\\
+\hllin{\ 4\ }\hlcom{\ {*}\ This\ is\ the\ model\ class\ for\ table\ "tbl\symbol {95}project".}\\
+\hllin{\ 5\ }\hlcom{\ {*}}\\
+\hllin{\ 6\ }\hlcom{\ {*}\ The\ followings\ are\ the\ available\ columns\ in\ table\ }\Righttorque\\
+\hllin{\ 7\ }\hlcom{\ 'tbl\symbol {95}project':}\\
+\hllin{\ 8\ }\hlcom{\ {*}\ @property\ integer\ \$id}\\
+\hllin{\ 9\ }\hlcom{\ {*}\ @property\ string\ \$name}\\
+\hllin{10\ }\hlcom{\ {*}\ @property\ string\ \$number}\\
+\hllin{11\ }\hlcom{\ {*}\ @property\ string\ \$fund\symbol {95}number}\\
+\hllin{12\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}intl}\\
+\hllin{13\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}national}\\
+\hllin{14\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}provincial}\\
+\hllin{15\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}city}\\
+\hllin{16\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}school}\\
+\hllin{17\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}enterprise}\\
+\hllin{18\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}NSF}\\
+\hllin{19\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}973}\\
+\hllin{20\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}863}\\
+\hllin{21\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}NKTRD}\\
+\hllin{22\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}DFME}\\
+\hllin{23\ }\hlcom{\ {*}\ @property\ integer\ \$is\symbol {95}major}\\
+\hllin{24\ }\hlcom{\ {*}\ @property\ string\ \$start\symbol {95}date}\\
+\hllin{25\ }\hlcom{\ {*}\ @property\ string\ \$deadline\symbol {95}date}\\
+\hllin{26\ }\hlcom{\ {*}\ @property\ string\ \$conclude\symbol {95}date}\\
+\hllin{27\ }\hlcom{\ {*}\ @property\ string\ \$app\symbol {95}date}\\
+\hllin{28\ }\hlcom{\ {*}\ @property\ string\ \$pass\symbol {95}date}\\
+\hllin{29\ }\hlcom{\ {*}\ @property\ string\ \$app\symbol {95}fund}\\
+\hllin{30\ }\hlcom{\ {*}\ @property\ string\ \$pass\symbol {95}fund}\\
+\hllin{31\ }\hlcom{\ {*}}\\
+\hllin{32\ }\hlcom{\ {*}\ The\ followings\ are\ the\ available\ model\ relations:}\\
+\hllin{33\ }\hlcom{\ {*}\ @property\ People{[}{]}\ \$tblPeoples}\\
+\hllin{34\ }\hlcom{\ {*}/}\hlstd{}\\
+\hllin{35\ }\hlkwa{class\ }\hlstd{Project\ }\hlkwa{extends\ }\hlstd{CActiveRecord}\\
+\hllin{36\ }\hlopt{\symbol {123}}\\
+\hllin{37\ }\hlstd{\ \\
+\hllin{38\ }\\
+\hllin{39\ }\ }\hlkwa{const\ }\hlstd{EXECUTE}\hlopt{=}\hlstd{}\hlnum{0}\hlstd{}\hlopt{;}\\
+\hllin{40\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{const\ }\hlstd{LIABILITY}\hlopt{=}\hlstd{}\hlnum{1}\hlstd{}\hlopt{;}\\
+\hllin{41\ }\hlstd{\\
+\hllin{42\ }\\
+\hllin{43\ }\\
+\hllin{44\ }}\hlstd{\ \ \ \ }\hlstd{}\hlcom{/{*}{*}}\\
+\hllin{45\ }\hlcom{}\hlstd{\ \ \ \ \ }\hlcom{{*}@var\ array()\ of\ people\ id}\\
+\hllin{46\ }\hlcom{}\hlstd{\ \ \ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{47\ }\ }\hlkwa{public\ }\hlstd{}\hlkwc{\$executePeoples}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{48\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ }\hlstd{}\hlkwc{\$liabilityPeoples}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();\ }\hlstd{}\hlslc{//must\ be\ different\ }\Righttorque\\
+\hllin{49\ }\hlslc{}\hlstd{\ \ \ \ }\hlslc{from\ the\ relation\ name!}\\
+\hllin{50\ }\hlstd{\\
+\hllin{51\ }\\
+\hllin{52\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ }\hlstd{}\hlkwc{\$searchExecutePeople}\hlstd{}\hlopt{=}\hlstd{null}\hlopt{;}\\
+\hllin{53\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ }\hlstd{}\hlkwc{\$searchLiabilityPeople}\hlstd{}\hlopt{=}\hlstd{null}\hlopt{;}\\
+\hllin{54\ }\hlstd{\\
+\hllin{55\ }\ }\hlcom{/{*}{*}}\\
+\hllin{56\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ string\ the\ associated\ database\ table\ name}\\
+\hllin{57\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{58\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{tableName}\hlstd{}\hlopt{()}\\
+\hllin{59\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{60\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlstr{'tbl\symbol {95}project'}\hlstd{}\hlopt{;}\\
+\hllin{61\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{62\ }\hlstd{\\
+\hllin{63\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{getLevelList}\hlstd{}\hlopt{()\symbol {123}}\\
+\hllin{64\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{();}\\
+\hllin{65\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{66\ }\hlstd{\\
+\hllin{67\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{getTypeString}\hlstd{}\hlopt{()\symbol {123}}\\
+\hllin{68\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{();}\\
+\hllin{69\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{70\ }\hlstd{\\
+\hllin{71\ }\ }\hlcom{/{*}{*}}\\
+\hllin{72\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ array\ validation\ rules\ for\ model\ attributes.}\\
+\hllin{73\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{74\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{rules}\hlstd{}\hlopt{()}\\
+\hllin{75\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{76\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\\
+\hllin{77\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'required'}\hlstd{}\hlopt{),}\\
+\hllin{78\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}intl,\ is\symbol {95}national,\ is\symbol {95}provincial,\ is\symbol {95}city,\ }\Righttorque\\
+\hllin{79\ }\hlstr{}\hlstd{\ \ \ }\hlstr{is\symbol {95}school,\ is\symbol {95}enterprise,\ is\symbol {95}NSF,\ is\symbol {95}973,\ is\symbol {95}863,\ }\Righttorque\\
+\hllin{80\ }\hlstr{}\hlstd{\ \ \ }\hlstr{is\symbol {95}NKTRD,\ is\symbol {95}DFME,\ is\symbol {95}major'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'numerical'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'integerOnly'}\hlstd{}\hlopt{=\symbol {62}}\Righttorque\\
+\hllin{81\ }\hlstd{}\hlstd{\ \ \ }\hlstd{true}\hlopt{),}\\
+\hllin{82\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'name,\ number,\ fund\symbol {95}number'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'length'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'max'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlnum{255}\hlstd{}\hlopt{),}\\
+\hllin{83\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'app\symbol {95}fund,\ pass\symbol {95}fund'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'length'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'max'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlnum{15}\hlstd{}\hlopt{),}\\
+\hllin{84\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'start\symbol {95}date,\ deadline\symbol {95}date,\ conclude\symbol {95}date,\ app\symbol {95}date,}\Righttorque\\
+\hllin{85\ }\hlstr{}\hlstd{\ \ \ }\hlstr{pass\symbol {95}date'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'safe'}\hlstd{}\hlopt{),}\\
+\hllin{86\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'id,\ name,\ number,\ fund\symbol {95}number,\ is\symbol {95}intl,\ }\Righttorque\\
+\hllin{87\ }\hlstr{}\hlstd{\ \ \ }\hlstr{is\symbol {95}national,\ is\symbol {95}provincial,\ is\symbol {95}city,\ is\symbol {95}school,\ }\Righttorque\\
+\hllin{88\ }\hlstr{}\hlstd{\ \ \ }\hlstr{is\symbol {95}enterprise,\ is\symbol {95}NSF,\ is\symbol {95}973,\ is\symbol {95}863,\ is\symbol {95}NKTRD,\ is\symbol {95}DFME,\ }\Righttorque\\
+\hllin{89\ }\hlstr{}\hlstd{\ \ \ }\hlstr{is\symbol {95}major,\ start\symbol {95}date,\ deadline\symbol {95}date,\ conclude\symbol {95}date,\ }\Righttorque\\
+\hllin{90\ }\hlstr{}\hlstd{\ \ \ }\hlstr{app\symbol {95}date,\ pass\symbol {95}date,\ app\symbol {95}fund,\ pass\symbol {95}fund,\ '}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'safe'}\hlstd{}\hlopt{,\ }\Righttorque\\
+\hllin{91\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'on'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'search'}\hlstd{}\hlopt{),}\\
+\hllin{92\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{);}\\
+\hllin{93\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{94\ }\hlstd{\\
+\hllin{95\ }\ }\hlcom{/{*}{*}}\\
+\hllin{96\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ array\ relational\ rules.}\\
+\hllin{97\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{98\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{relations}\hlstd{}\hlopt{()}\\
+\hllin{99\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{100\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//\ NOTE:\ you\ may\ need\ to\ adjust\ the\ relation\ name\ and\ the\ }\Righttorque\\
+\hllin{101\ }\hlslc{}\hlstd{\ \ }\hlslc{related}\\
+\hllin{102\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//\ class\ name\ for\ the\ relations\ automatically\ generated\ }\Righttorque\\
+\hllin{103\ }\hlslc{}\hlstd{\ \ }\hlslc{below.}\\
+\hllin{104\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlcom{/{*}}\\
+\hllin{105\ }\hlcom{}\hlstd{\ \ \ }\hlcom{must\ add\ an\ alias\ to\ disambiguate\ col\ names\ in\ the\ order\ }\Righttorque\\
+\hllin{106\ }\hlcom{}\hlstd{\ \ \ }\hlcom{clause,}\\
+\hllin{107\ }\hlcom{}\hlstd{\ \ \ }\hlcom{can't\ disambiguate\ without\ alias:}\\
+\hllin{108\ }\hlcom{}\hlstd{\ \ \ }\hlcom{\symbol {60}WRONG\symbol {95}CODE\symbol {62}}\\
+\hllin{109\ }\hlcom{}\hlstd{\ \ \ \ }\hlcom{...}\\
+\hllin{110\ }\hlcom{}\hlstd{\ \ \ \ }\hlcom{'execute\symbol {95}peoples'\ =\symbol {62}\ array(}\\
+\hllin{111\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{self::MANY\symbol {95}MANY,\ }\\
+\hllin{112\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{'People',\ }\\
+\hllin{113\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{'tbl\symbol {95}project\symbol {95}people\symbol {95}execute(project\symbol {95}id,\ }\Righttorque\\
+\hllin{114\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{people\symbol {95}id)',}\\
+\hllin{115\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{'order'=\symbol {62}'execute\symbol {95}peoples.seq',}\\
+\hllin{116\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{),}\\
+\hllin{117\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{...}\\
+\hllin{118\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{\symbol {60}WRONG\symbol {95}CODE/\symbol {62}}\\
+\hllin{119\ }\hlcom{}\\
+\hllin{120\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{seems\ a\ bug\ in\ the\ Yii\ framework,\ alias\ seemd\ to\ }\Righttorque\\
+\hllin{121\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{be\ concated\ with\ }\\
+\hllin{122\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{relationName\ in\ the\ SQL\ JOIN(instead\ of\ }\Righttorque\\
+\hllin{123\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{replacing\ it):}\\
+\hllin{124\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{eg:}\\
+\hllin{125\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{if\ not\ specifying\ alias,\ the\ above\ WRONG\ code\ }\Righttorque\\
+\hllin{126\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{would\ render\ SQL\ like:}\\
+\hllin{127\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{LEFT\ OUTER\ JOIN\ `tbl\symbol {95}project\symbol {95}people\symbol {95}execute`\ }\Righttorque\\
+\hllin{128\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{`execute\symbol {95}peoples\symbol {95}execute\symbol {95}peoples`\ }\\
+\hllin{129\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{ON\ (`t`.}\Righttorque\\
+\hllin{130\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{`id`=`execute\symbol {95}peoples\symbol {95}execute\symbol {95}peoples`.}\Righttorque\\
+\hllin{131\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{`project\symbol {95}id`)}\\
+\hllin{132\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{which\ makes\ it\ not\ possible\ to\ disambiguate\ col\ }\Righttorque\\
+\hllin{133\ }\hlcom{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlcom{names\ in\ order\ clause}\\
+\hllin{134\ }\hlcom{}\\
+\hllin{135\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{136\ }}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\\
+\hllin{137\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'liability\symbol {95}peoples'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{138\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{self}\hlopt{::}\hlstd{MANY\symbol {95}MANY}\hlopt{,\ }\\
+\hllin{139\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{,\ }\\
+\hllin{140\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'tbl\symbol {95}project\symbol {95}people\symbol {95}liability(project\symbol {95}id,\ people\symbol {95}id)'}\hlstd{}\hlopt{,}\\
+\hllin{141\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'order'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'liability\symbol {95}peoples\symbol {95}liability\symbol {95}.seq'}\hlstd{}\hlopt{,}\\
+\hllin{142\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'alias'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'liability\symbol {95}'}\hlstd{\\
+\hllin{143\ }}\hlstd{\ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{144\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'execute\symbol {95}peoples'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{145\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{self}\hlopt{::}\hlstd{MANY\symbol {95}MANY}\hlopt{,\ }\\
+\hllin{146\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{,\ }\\
+\hllin{147\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'tbl\symbol {95}project\symbol {95}people\symbol {95}execute(project\symbol {95}id,\ }\Righttorque\\
+\hllin{148\ }\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{people\symbol {95}id)'}\hlstd{}\hlopt{,}\\
+\hllin{149\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'order'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'execute\symbol {95}peoples\symbol {95}execute\symbol {95}.seq'}\hlstd{}\hlopt{,}\\
+\hllin{150\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'alias'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'execute\symbol {95}'}\hlstd{\\
+\hllin{151\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{152\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{);}\\
+\hllin{153\ }\hlstd{\\
+\hllin{154\ }\ }\hlopt{\symbol {125}}\\
+\hllin{155\ }\hlstd{\\
+\hllin{156\ }\ }\hlcom{/{*}{*}}\\
+\hllin{157\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ array\ customized\ attribute\ labels\ (name=\symbol {62}label)}\\
+\hllin{158\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{159\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{attributeLabels}\hlstd{}\hlopt{()}\\
+\hllin{160\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{161\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\\
+\hllin{162\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'id'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'ID'}\hlstd{}\hlopt{,}\\
+\hllin{163\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'name'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'项目名称'}\hlstd{}\hlopt{,}\\
+\hllin{164\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'number'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'编号'}\hlstd{}\hlopt{,}\\
+\hllin{165\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'fund\symbol {95}number'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'经费本编号'}\hlstd{}\hlopt{,}\\
+\hllin{166\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}intl'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'国际'}\hlstd{}\hlopt{,}\\
+\hllin{167\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}national'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'国家级'}\hlstd{}\hlopt{,}\\
+\hllin{168\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}provincial'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'省部级'}\hlstd{}\hlopt{,}\\
+\hllin{169\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}city'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'市级'}\hlstd{}\hlopt{,}\\
+\hllin{170\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}school'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'校级'}\hlstd{}\hlopt{,}\\
+\hllin{171\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}enterprise'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'横向'}\hlstd{}\hlopt{,}\\
+\hllin{172\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}NSF'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'国家自然基金'}\hlstd{}\hlopt{,}\\
+\hllin{173\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}973'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'973'}\hlstd{}\hlopt{,}\\
+\hllin{174\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}863'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'863'}\hlstd{}\hlopt{,}\\
+\hllin{175\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}NKTRD'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'科技支撑计划'}\hlstd{}\hlopt{,}\\
+\hllin{176\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}DFME'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'教育部高校博士点基金'}\hlstd{}\hlopt{,}\\
+\hllin{177\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'is\symbol {95}major'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'重大专项'}\hlstd{}\hlopt{,}\\
+\hllin{178\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'start\symbol {95}date'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'开始时间'}\hlstd{}\hlopt{,}\\
+\hllin{179\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'deadline\symbol {95}date'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'截至时间'}\hlstd{}\hlopt{,}\\
+\hllin{180\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'conclude\symbol {95}date'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'结题时间'}\hlstd{}\hlopt{,}\\
+\hllin{181\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'app\symbol {95}date'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'申报时间'}\hlstd{}\hlopt{,}\\
+\hllin{182\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'pass\symbol {95}date'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'立项时间'}\hlstd{}\hlopt{,}\\
+\hllin{183\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'app\symbol {95}fund'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'申报经费'}\hlstd{}\hlopt{,}\\
+\hllin{184\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'pass\symbol {95}fund'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'立项经费'}\hlstd{}\hlopt{,}\\
+\hllin{185\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'execute\symbol {95}peoples'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'实际执行人员'}\hlstd{}\hlopt{,}\\
+\hllin{186\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'liability\symbol {95}peoples'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{}\hlstr{'项目书人员'}\hlstd{}\hlopt{,}\\
+\hllin{187\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{);}\\
+\hllin{188\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{189\ }\hlstd{\\
+\hllin{190\ }\ }\hlcom{/{*}{*}}\\
+\hllin{191\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Retrieves\ a\ list\ of\ models\ based\ on\ the\ current\ }\Righttorque\\
+\hllin{192\ }\hlcom{}\hlstd{\ \ }\hlcom{search/filter\ conditions.}\\
+\hllin{193\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}}\\
+\hllin{194\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Typical\ usecase:}\\
+\hllin{195\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ {-}\ Initialize\ the\ model\ fields\ with\ values\ from\ filter\ }\Righttorque\\
+\hllin{196\ }\hlcom{}\hlstd{\ \ }\hlcom{form.}\\
+\hllin{197\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ {-}\ Execute\ this\ method\ to\ get\ CActiveDataProvider\ }\Righttorque\\
+\hllin{198\ }\hlcom{}\hlstd{\ \ }\hlcom{instance\ which\ will\ filter}\\
+\hllin{199\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ models\ according\ to\ data\ in\ model\ fields.}\\
+\hllin{200\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ {-}\ Pass\ data\ provider\ to\ CGridView,\ CListView\ or\ any\ }\Righttorque\\
+\hllin{201\ }\hlcom{}\hlstd{\ \ }\hlcom{similar\ widget.}\\
+\hllin{202\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}}\\
+\hllin{203\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ CActiveDataProvider\ the\ data\ provider\ that\ can\ }\Righttorque\\
+\hllin{204\ }\hlcom{}\hlstd{\ \ }\hlcom{return\ the\ models}\\
+\hllin{205\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ based\ on\ the\ search/filter\ conditions.}\\
+\hllin{206\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{207\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{search}\hlstd{}\hlopt{()}\\
+\hllin{208\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{209\ }\hlstd{\\
+\hllin{210\ }}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{new\ }\hlstd{CDbCriteria}\hlopt{;}\\
+\hllin{211\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{with}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{212\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'execute\symbol {95}peoples'}\hlstd{}\hlopt{,}\\
+\hllin{213\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'liability\symbol {95}peoples'}\hlstd{\\
+\hllin{214\ }}\hlstd{\ \ }\hlstd{}\hlopt{);}\\
+\hllin{215\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{together}\hlopt{=}\hlstd{true}\hlopt{;}\\
+\hllin{216\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{group\ }\hlopt{=\ }\hlstd{}\hlstr{'t.id'}\hlstd{}\hlopt{;}\\
+\hllin{217\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'execute\symbol {95}peoples.id'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{218\ }\hlstd{}\hlstd{\ \ }\hlstd{searchExecutePeople}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{219\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'liability\symbol {95}peoples.id'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{220\ }\hlstd{}\hlstd{\ \ }\hlstd{searchLiabilityPeople}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{221\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{222\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'number'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{number}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{223\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'fund\symbol {95}number'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{fund\symbol {95}number}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{224\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}intl'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}intl}\hlopt{);}\\
+\hllin{225\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}national'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}national}\hlopt{);}\\
+\hllin{226\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}provincial'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}provincial}\hlopt{);}\\
+\hllin{227\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}city'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}city}\hlopt{);}\\
+\hllin{228\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}school'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}school}\hlopt{);}\\
+\hllin{229\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}enterprise'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}enterprise}\hlopt{);}\\
+\hllin{230\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}NSF'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NSF}\hlopt{);}\\
+\hllin{231\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}973'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}973}\hlopt{);}\\
+\hllin{232\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}863'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}863}\hlopt{);}\\
+\hllin{233\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}NKTRD'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NKTRD}\hlopt{);}\\
+\hllin{234\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}DFME'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}DFME}\hlopt{);}\\
+\hllin{235\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}major'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}major}\hlopt{);}\\
+\hllin{236\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'start\symbol {95}date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{start\symbol {95}date}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{237\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'deadline\symbol {95}date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{deadline\symbol {95}date}\hlopt{,}\Righttorque\\
+\hllin{238\ }\hlstd{}\hlstd{\ \ }\hlstd{true}\hlopt{);}\\
+\hllin{239\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'conclude\symbol {95}date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{conclude\symbol {95}date}\hlopt{,}\Righttorque\\
+\hllin{240\ }\hlstd{}\hlstd{\ \ }\hlstd{true}\hlopt{);}\\
+\hllin{241\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'app\symbol {95}date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{app\symbol {95}date}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{242\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'pass\symbol {95}date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}date}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{243\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'app\symbol {95}fund'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{app\symbol {95}fund}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{244\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'pass\symbol {95}fund'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}fund}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{245\ }\hlstd{\\
+\hllin{246\ }}\hlstd{\ \ }\hlstd{}\hlkwa{return\ new\ }\hlstd{}\hlkwd{CActiveDataProvider}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{,\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{247\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'criteria'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{,}\\
+\hllin{248\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{));}\\
+\hllin{249\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{250\ }\hlstd{\\
+\hllin{251\ }\ \\
+\hllin{252\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{getLevelString}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{=}\hlstd{}\hlstr{',\ '}\hlstd{}\hlopt{)\symbol {123}}\\
+\hllin{253\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$levels\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{254\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$attrs\ }\hlstd{}\hlopt{=\ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{attributeLabels}\hlstd{}\hlopt{();}\\
+\hllin{255\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}intl}\hlopt{)\symbol {123}}\\
+\hllin{256\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}intl'}\hlstd{}\hlopt{{]});}\\
+\hllin{257\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{258\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}national}\hlopt{)\symbol {123}}\\
+\hllin{259\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}national'}\hlstd{}\hlopt{{]});}\\
+\hllin{260\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{261\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}provincial}\hlopt{)\symbol {123}}\\
+\hllin{262\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}provincial'}\hlstd{}\hlopt{{]});}\\
+\hllin{263\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{264\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}city}\hlopt{)\symbol {123}}\\
+\hllin{265\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}city'}\hlstd{}\hlopt{{]});}\\
+\hllin{266\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{267\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}school}\hlopt{)\symbol {123}}\\
+\hllin{268\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}school'}\hlstd{}\hlopt{{]});}\\
+\hllin{269\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{270\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}enterprise}\hlopt{)\symbol {123}}\\
+\hllin{271\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}enterprise'}\hlstd{}\hlopt{{]});}\\
+\hllin{272\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{273\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NSF}\hlopt{)\symbol {123}}\\
+\hllin{274\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}NSF'}\hlstd{}\hlopt{{]});}\\
+\hllin{275\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{276\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}973}\hlopt{)\symbol {123}}\\
+\hllin{277\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}973'}\hlstd{}\hlopt{{]});}\\
+\hllin{278\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{279\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}863}\hlopt{)\symbol {123}}\\
+\hllin{280\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}863'}\hlstd{}\hlopt{{]});}\\
+\hllin{281\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{282\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NKTRD}\hlopt{)\symbol {123}}\\
+\hllin{283\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}NKTRD'}\hlstd{}\hlopt{{]});}\\
+\hllin{284\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{285\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}DFME}\hlopt{)\symbol {123}}\\
+\hllin{286\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}DFME'}\hlstd{}\hlopt{{]});}\\
+\hllin{287\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{288\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}major}\hlopt{)\symbol {123}}\\
+\hllin{289\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attrs}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'is\symbol {95}major'}\hlstd{}\hlopt{{]});}\\
+\hllin{290\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{291\ }\hlstd{\\
+\hllin{292\ }\\
+\hllin{293\ }}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlkwd{implode}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$levels}\hlstd{}\hlopt{);}\\
+\hllin{294\ }\hlstd{\\
+\hllin{295\ }}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{296\ }\hlstd{\\
+\hllin{297\ }\\
+\hllin{298\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{getPeoples}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{=}\hlstd{}\hlstr{',\ '}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{)}\Righttorque\\
+\hllin{299\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{300\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesArr\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{301\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{switch\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{302\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{:}\\
+\hllin{303\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleRecords}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{execute\symbol {95}peoples}\hlopt{;}\\
+\hllin{304\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{305\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{:}\\
+\hllin{306\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleRecords}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{liability\symbol {95}peoples}\hlopt{;}\\
+\hllin{307\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{308\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwa{default}\hlstd{}\hlopt{:}\\
+\hllin{309\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleRecords}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{execute\symbol {95}peoples}\hlopt{;}\\
+\hllin{310\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{311\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{312\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{foreach\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$peopleRecords\ }\hlstd{}\hlkwa{as\ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{313\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$peoplesArr}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{);}\\
+\hllin{314\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{315\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlkwd{implode}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$peoplesArr}\hlstd{}\hlopt{);}\\
+\hllin{316\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{317\ }\hlstd{\\
+\hllin{318\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{getExecutePeoples}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{=}\hlstd{}\hlstr{',\ '}\hlstd{}\hlopt{,}\Righttorque\\
+\hllin{319\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{320\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{getPeoples}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{,}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{);}\\
+\hllin{321\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{322\ }\hlstd{\\
+\hllin{323\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{getLiabilityPeoples}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{=}\hlstd{}\hlstr{',\ '}\hlstd{}\hlopt{,}\Righttorque\\
+\hllin{324\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{325\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{getPeoples}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{,}\hlstd{}\hlkwc{\$glue}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{);}\\
+\hllin{326\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{327\ }\hlstd{\\
+\hllin{328\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{getExecutePeoplesJsArray}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'id'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{329\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwc{\$executePeoples\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{330\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{foreach\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{execute\symbol {95}peoples\ }\hlkwa{as\ }\hlstd{}\hlkwc{\$executePeople}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{331\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$executePeoples}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'"'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$executePeople}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{.}\Righttorque\\
+\hllin{332\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlstr{'"'}\hlstd{}\hlopt{);}\\
+\hllin{333\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{334\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlkwd{implode}\hlstd{}\hlopt{(}\hlstd{}\hlstr{',\ '}\hlstd{}\hlopt{,\ }\hlstd{}\hlkwc{\$executePeoples}\hlstd{}\hlopt{);}\\
+\hllin{335\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{336\ }\hlstd{\\
+\hllin{337\ }\\
+\hllin{338\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{getLiabilityPeoplesJsArray}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'id'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{339\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwc{\$executePeoples\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{340\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{foreach\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{liability\symbol {95}peoples\ }\hlkwa{as\ }\hlstd{}\hlkwc{\$executePeople}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{341\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}push}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$executePeoples}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'"'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$executePeople}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwc{\$attr}\hlstd{}\hlopt{.}\Righttorque\\
+\hllin{342\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlstr{'"'}\hlstd{}\hlopt{);}\\
+\hllin{343\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{344\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlkwd{implode}\hlstd{}\hlopt{(}\hlstd{}\hlstr{',\ '}\hlstd{}\hlopt{,\ }\hlstd{}\hlkwc{\$executePeoples}\hlstd{}\hlopt{);}\\
+\hllin{345\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{346\ }\hlstd{\\
+\hllin{347\ }\ }\hlcom{/{*}{*}}\\
+\hllin{348\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Returns\ the\ static\ model\ of\ the\ specified\ AR\ class.}\\
+\hllin{349\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Please\ note\ that\ you\ should\ have\ this\ exact\ method\ in\ }\Righttorque\\
+\hllin{350\ }\hlcom{}\hlstd{\ \ }\hlcom{all\ your\ CActiveRecord\ descendants!}\\
+\hllin{351\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @param\ string\ \$className\ active\ record\ class\ name.}\\
+\hllin{352\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ Project\ the\ static\ model\ class}\\
+\hllin{353\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{354\ }\ }\hlkwa{public\ static\ function\ }\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$className}\hlstd{}\hlopt{=}\hlstd{\symbol {95}\symbol {95}CLASS\symbol {95}\symbol {95}}\hlopt{)}\\
+\hllin{355\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{356\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ }\hlstd{parent}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$className}\hlstd{}\hlopt{);}\\
+\hllin{357\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{358\ }\hlstd{\\
+\hllin{359\ }\ \\
+\hllin{360\ }\ }\hlkwa{protected\ function\ }\hlstd{}\hlkwd{beforeSave}\hlstd{}\hlopt{()}\\
+\hllin{361\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{362\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}date}\hlopt{==}\hlstd{}\hlstr{''}\hlstd{}\hlopt{)}\\
+\hllin{363\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}date}\hlopt{=}\hlstd{null}\hlopt{;}\\
+\hllin{364\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{app\symbol {95}date}\hlopt{==}\hlstd{}\hlstr{''}\hlstd{}\hlopt{)}\\
+\hllin{365\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{app\symbol {95}date}\hlopt{=}\hlstd{null}\hlopt{;}\\
+\hllin{366\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{conclude\symbol {95}date}\hlopt{==}\hlstd{}\hlstr{''}\hlstd{}\hlopt{)}\\
+\hllin{367\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{conclude\symbol {95}date}\hlopt{=}\hlstd{null}\hlopt{;}\\
+\hllin{368\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{scenario}\hlopt{==}\hlstd{}\hlstr{'update'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{369\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{deleteProjectPeople}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{)\ \&\&\ }\hlstd{self}\hlopt{::}\Righttorque\\
+\hllin{370\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwd{deleteProjectPeople}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{))\symbol {123}}\\
+\hllin{371\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{parent}\hlopt{::}\hlstd{}\hlkwd{beforeSave}\hlstd{}\hlopt{();}\\
+\hllin{372\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}\ }\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{373\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{false}\hlopt{;}\\
+\hllin{374\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{375\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{376\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ }\hlstd{parent}\hlopt{::}\hlstd{}\hlkwd{beforeSave}\hlstd{}\hlopt{();}\\
+\hllin{377\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{378\ }\hlstd{\\
+\hllin{379\ }\ }\hlkwa{protected\ function\ }\hlstd{}\hlkwd{afterSave}\hlstd{}\hlopt{()\ \symbol {123}}\\
+\hllin{380\ }\hlstd{}\hlstd{\ \ }\hlstd{\\
+\hllin{381\ }}\hlstd{\ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{populateProjectPeople}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{)\ \&\&\ }\Righttorque\\
+\hllin{382\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{populateProjectPeople}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{))\ \symbol {123}}\\
+\hllin{383\ }\hlstd{\\
+\hllin{384\ }}\hlstd{\ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\hlstd{\ \ }\hlopt{}\\
+\hllin{385\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{386\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{false}\hlopt{;}\\
+\hllin{387\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{388\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{\\
+\hllin{389\ }}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{parent}\hlopt{::}\hlstd{}\hlkwd{afterSave}\hlstd{}\hlopt{();}\\
+\hllin{390\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{391\ }\hlstd{\\
+\hllin{392\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{private\ function\ }\hlstd{}\hlkwd{deleteProjectPeople}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{393\ }\hlstd{}\hlstd{\ \ \ \ \ \ }\hlstd{}\hlkwc{\$criteria\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{CDbCriteria}\hlopt{;}\\
+\hllin{394\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{condition\ }\hlopt{=\ }\hlstd{}\hlstr{'project\symbol {95}id=:project\symbol {95}id'}\hlstd{}\hlopt{;}\\
+\hllin{395\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{params\ }\hlopt{=\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{':project\symbol {95}id'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{);}\\
+\hllin{396\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{\\
+\hllin{397\ }\\
+\hllin{398\ }}\hlstd{\ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{switch\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{399\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{:}\\
+\hllin{400\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{ProjectPeopleExecute}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{deleteAll}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{401\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{);}\\
+\hllin{402\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{403\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{\\
+\hllin{404\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{:}\\
+\hllin{405\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{ProjectPeopleLiability}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{deleteAll}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{406\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{);}\\
+\hllin{407\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{408\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{default}\hlstd{}\hlopt{:}\\
+\hllin{409\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{ProjectPeopleExecute}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\Righttorque\\
+\hllin{410\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{deleteAll}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{);}\\
+\hllin{411\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{412\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{413\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{true}\hlopt{;}\\
+\hllin{414\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{415\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{private\ function\ }\hlstd{}\hlkwd{populateProjectPeople}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{)}\\
+\hllin{416\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{417\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{switch\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{418\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{:}\\
+\hllin{419\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{executePeoples}\hlopt{;}\\
+\hllin{420\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{421\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{\\
+\hllin{422\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{:}\\
+\hllin{423\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{liabilityPeoples}\hlopt{;}\\
+\hllin{424\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{425\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{default}\hlstd{}\hlopt{:}\\
+\hllin{426\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{executePeoples}\hlopt{;}\\
+\hllin{427\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{428\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{429\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{=}\hlstd{}\hlnum{0}\hlstd{}\hlopt{;}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{\symbol {60}}\hlstd{}\hlkwd{count}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{);}\hlstd{}\hlkwc{\$i}\hlstd{++}\hlopt{)\ \symbol {123}}\\
+\hllin{430\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{{[}}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{{]}!=}\hlstd{null\ }\hlopt{\&\&\ }\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{{[}}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{{]}!=}\hlstd{}\hlnum{0}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{431\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{switch\ }\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$type}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{432\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{:}\\
+\hllin{433\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projectPeople\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\Righttorque\\
+\hllin{434\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{ProjectPeopleExecute}\hlopt{;}\\
+\hllin{435\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{436\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{case\ }\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{:}\\
+\hllin{437\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projectPeople\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\Righttorque\\
+\hllin{438\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{ProjectPeopleLiability}\hlopt{;}\\
+\hllin{439\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{440\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{default}\hlstd{}\hlopt{:}\\
+\hllin{441\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projectPeople\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\Righttorque\\
+\hllin{442\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{ProjectPeopleExecute}\hlopt{;}\\
+\hllin{443\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{break}\hlstd{}\hlopt{;}\\
+\hllin{444\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{445\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{\\
+\hllin{446\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projectPeople}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{seq\ }\hlopt{=\ }\hlstd{}\hlkwc{\$i}\hlstd{+}\hlnum{1}\hlstd{}\hlopt{;}\\
+\hllin{447\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projectPeople}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{project\symbol {95}id}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{;}\\
+\hllin{448\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projectPeople}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{people\symbol {95}id}\hlopt{=}\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{{[}}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{{]};}\\
+\hllin{449\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//echo\ \$projectPeople{-}\symbol {62}project\symbol {95}id."\ ".}\Righttorque\\
+\hllin{450\ }\hlslc{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlslc{\$projectPeople{-}\symbol {62}people\symbol {95}id."\symbol {60}br\symbol {62}";}\\
+\hllin{451\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$projectPeople}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{())\ \symbol {123}}\\
+\hllin{452\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{yii}\hlopt{::}\hlstd{}\hlkwd{trace}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"peoples{[}i{]}:"}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$peoples}\hlstd{}\hlopt{{[}}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{{]}.}\hlstd{}\hlstr{"\ }\Righttorque\\
+\hllin{453\ }\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{saved"}\hlstd{}\hlopt{,}\hlstd{}\hlstr{"Project.populateProjectPeople()"}\hlstd{}\hlopt{)}\Righttorque\\
+\hllin{454\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{;}\\
+\hllin{455\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}\ }\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{456\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{false}\hlopt{;}\\
+\hllin{457\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{458\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{459\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{460\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{true}\hlopt{;}\\
+\hllin{461\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{462\ }\hlstd{\\
+\hllin{463\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{protected\ function\ }\hlstd{}\hlkwd{afterDelete}\hlstd{}\hlopt{()\ \symbol {123}}\\
+\hllin{464\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{deleteProjectPeople}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{EXECUTE}\hlopt{)\ \&\&\ }\hlstd{self}\hlopt{::}\Righttorque\\
+\hllin{465\ }\hlstd{}\hlstd{\ \ \ \ \ }\hlstd{}\hlkwd{deleteProjectPeople}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{LIABILITY}\hlopt{))\symbol {123}}\\
+\hllin{466\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{parent}\hlopt{::}\hlstd{}\hlkwd{afterDelete}\hlstd{}\hlopt{();}\\
+\hllin{467\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}\ }\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{468\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{false}\hlopt{;}\\
+\hllin{469\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{470\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{471\ }\hlstd{}\hlopt{\symbol {125}}\hlstd{}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\section{控制器类：ProjectController.php}
+\noindent
+\ttfamily
+\hlstd{}\hllin{\ 1\ }\hlopt{\symbol {60}}\hlstd{?php\\
+\hllin{\ 2\ }Yii}\hlopt{::}\hlstd{}\hlkwd{import}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'application.vendor.{*}'}\hlstd{}\hlopt{);}\\
+\hllin{\ 3\ }\hlstd{}\hlkwa{require\symbol {95}once}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'password\symbol {95}compat/password\symbol {95}compat.php'}\hlstd{}\hlopt{);}\\
+\hllin{\ 4\ }\hlstd{}\hlkwa{require\symbol {95}once}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'PHPExcel/PHPExcel.php'}\hlstd{}\hlopt{);}\\
+\hllin{\ 5\ }\hlstd{}\hlkwa{class\ }\hlstd{ProjectController\ }\hlkwa{extends\ }\hlstd{Controller}\\
+\hllin{\ 6\ }\hlopt{\symbol {123}}\\
+\hllin{\ 7\ }\hlstd{\ }\hlcom{/{*}{*}}\\
+\hllin{\ 8\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @var\ string\ the\ default\ layout\ for\ the\ views.\ Defaults\ }\Righttorque\\
+\hllin{\ 9\ }\hlcom{}\hlstd{\ \ }\hlcom{to\ '//layouts/column2',\ meaning}\\
+\hllin{10\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ using\ two{-}column\ layout.\ See\ }\Righttorque\\
+\hllin{11\ }\hlcom{}\hlstd{\ \ }\hlcom{'protected/views/layouts/column2.php'.}\\
+\hllin{12\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{13\ }\ }\hlkwa{public\ }\hlstd{}\hlkwc{\$layout}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'//layouts/column2'}\hlstd{}\hlopt{;}\\
+\hllin{14\ }\hlstd{\\
+\hllin{15\ }\ }\hlcom{/{*}{*}}\\
+\hllin{16\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ array\ action\ filters}\\
+\hllin{17\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{18\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{filters}\hlstd{}\hlopt{()}\\
+\hllin{19\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{20\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\\
+\hllin{21\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'accessControl'}\hlstd{}\hlopt{,\ }\hlstd{}\hlslc{//\ perform\ access\ control\ for\ CRUD\ }\Righttorque\\
+\hllin{22\ }\hlslc{}\hlstd{\ \ \ }\hlslc{operations}\\
+\hllin{23\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlslc{//'postOnly\ +\ delete',\ //\ we\ only\ allow\ deletion\ via\ POST\ }\Righttorque\\
+\hllin{24\ }\hlslc{}\hlstd{\ \ \ }\hlslc{request}\\
+\hllin{25\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{);}\\
+\hllin{26\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{27\ }\hlstd{\\
+\hllin{28\ }\ }\hlcom{/{*}{*}}\\
+\hllin{29\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Specifies\ the\ access\ control\ rules.}\\
+\hllin{30\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ This\ method\ is\ used\ by\ the\ 'accessControl'\ filter.}\\
+\hllin{31\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ array\ access\ control\ rules}\\
+\hllin{32\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{33\ }\\
+\hllin{34\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{accessRules}\hlstd{}\hlopt{()}\\
+\hllin{35\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{36\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\\
+\hllin{37\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'allow'}\hlstd{}\hlopt{,}\hlstd{\ \ }\hlopt{}\hlstd{}\hlslc{//\ allow\ all\ users\ to\ perform\ 'index'\ and\ }\Righttorque\\
+\hllin{38\ }\hlslc{}\hlstd{\ \ \ }\hlslc{'view'\ actions}\\
+\hllin{39\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'actions'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'index'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'view'}\hlstd{}\hlopt{),}\\
+\hllin{40\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'users'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'{*}'}\hlstd{}\hlopt{),}\\
+\hllin{41\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{42\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'allow'}\hlstd{}\hlopt{,\ }\hlstd{}\hlslc{//\ allow\ authenticated\ user\ to\ perform\ }\Righttorque\\
+\hllin{43\ }\hlslc{}\hlstd{\ \ \ }\hlslc{'create'\ and\ 'update'\ actions}\\
+\hllin{44\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'actions'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'create'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'update'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'admin'}\hlstd{}\hlopt{),}\\
+\hllin{45\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'expression'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'isset(}\hlipl{\$user}\hlstr{{-}\symbol {62}is\symbol {95}project)\ \&\&\ }\hlipl{\$user}\hlstr{{-}\symbol {62}}\Righttorque\\
+\hllin{46\ }\hlstr{}\hlstd{\ \ \ \ }\hlstr{is\symbol {95}project'}\hlstd{}\hlopt{,}\\
+\hllin{47\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{48\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'allow'}\hlstd{}\hlopt{,\ }\hlstd{}\hlslc{//\ allow\ admin\ user\ to\ perform\ 'admin'\ and\ }\Righttorque\\
+\hllin{49\ }\hlslc{}\hlstd{\ \ \ }\hlslc{'delete'\ actions}\\
+\hllin{50\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'actions'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'upload'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'admin'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'delete'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'create'}\hlstd{}\hlopt{,}\Righttorque\\
+\hllin{51\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'update'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'import'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'export'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'pwd'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'reset'}\hlstd{}\hlopt{),}\\
+\hllin{52\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'expression'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlstr{'isset(}\hlipl{\$user}\hlstr{{-}\symbol {62}is\symbol {95}admin)\ \&\&\ }\hlipl{\$user}\hlstr{{-}\symbol {62}}\Righttorque\\
+\hllin{53\ }\hlstr{}\hlstd{\ \ \ \ }\hlstr{is\symbol {95}admin'}\hlstd{}\hlopt{,}\\
+\hllin{54\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{55\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'deny'}\hlstd{}\hlopt{,}\hlstd{\ \ }\hlopt{}\hlstd{}\hlslc{//\ deny\ all\ users}\\
+\hllin{56\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'users'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'{*}'}\hlstd{}\hlopt{),}\\
+\hllin{57\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{58\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{);}\\
+\hllin{59\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{60\ }\hlstd{\\
+\hllin{61\ }\ }\hlcom{/{*}{*}}\\
+\hllin{62\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Displays\ a\ particular\ model.}\\
+\hllin{63\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @param\ integer\ \$id\ the\ ID\ of\ the\ model\ to\ be\ displayed}\\
+\hllin{64\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{65\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionView}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{)}\\
+\hllin{66\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{67\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{render}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'view'}\hlstd{}\hlopt{,}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{68\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'model'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{loadModel}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{),}\\
+\hllin{69\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{));}\\
+\hllin{70\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{71\ }\hlstd{\\
+\hllin{72\ }\ }\hlkwa{private\ function\ }\hlstd{}\hlkwd{setModelPeoples}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{73\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'execute\symbol {95}peoples'}\hlstd{}\hlopt{{]}))}\\
+\hllin{74\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{executePeoples}\hlopt{=}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\Righttorque\\
+\hllin{75\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'execute\symbol {95}peoples'}\hlstd{}\hlopt{{]};}\\
+\hllin{76\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'liability\symbol {95}peoples'}\hlstd{}\hlopt{{]}))}\\
+\hllin{77\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{liabilityPeoples}\hlopt{=}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\Righttorque\\
+\hllin{78\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'liability\symbol {95}peoples'}\hlstd{}\hlopt{{]};}\\
+\hllin{79\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{80\ }\hlstd{\ }\hlcom{/{*}{*}}\\
+\hllin{81\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Creates\ a\ new\ model.}\\
+\hllin{82\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ If\ creation\ is\ successful,\ the\ browser\ will\ be\ }\Righttorque\\
+\hllin{83\ }\hlcom{}\hlstd{\ \ }\hlcom{redirected\ to\ the\ 'view'\ page.}\\
+\hllin{84\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{85\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionCreate}\hlstd{}\hlopt{()}\\
+\hllin{86\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{87\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{new\ }\hlstd{Project}\hlopt{;}\\
+\hllin{88\ }\hlstd{\\
+\hllin{89\ }}\hlstd{\ \ }\hlstd{}\hlslc{//\ Uncomment\ the\ following\ line\ if\ AJAX\ validation\ is\ }\Righttorque\\
+\hllin{90\ }\hlslc{}\hlstd{\ \ }\hlslc{needed}\\
+\hllin{91\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//\ \$this{-}\symbol {62}performAjaxValidation(\$model);}\\
+\hllin{92\ }\hlstd{\\
+\hllin{93\ }}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}))}\\
+\hllin{94\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{95\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{attributes}\hlopt{=}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]};}\\
+\hllin{96\ }\hlstd{}\hlstd{\ \ \ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{setModelPeoples}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{);}\\
+\hllin{97\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{())\ \symbol {123}}\\
+\hllin{98\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{redirect}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'view'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'id'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{));}\\
+\hllin{99\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{100\ }\hlstd{\\
+\hllin{101\ }}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{102\ }\hlstd{\\
+\hllin{103\ }}\hlstd{\ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{render}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'create'}\hlstd{}\hlopt{,}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{104\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'model'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{,}\\
+\hllin{105\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{));}\\
+\hllin{106\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{107\ }\hlstd{\\
+\hllin{108\ }\ }\hlcom{/{*}{*}}\\
+\hllin{109\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Updates\ a\ particular\ model.}\\
+\hllin{110\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ If\ update\ is\ successful,\ the\ browser\ will\ be\ redirected\ }\Righttorque\\
+\hllin{111\ }\hlcom{}\hlstd{\ \ }\hlcom{to\ the\ 'view'\ page.}\\
+\hllin{112\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @param\ integer\ \$id\ the\ ID\ of\ the\ model\ to\ be\ updated}\\
+\hllin{113\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{114\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionUpdate}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{)}\\
+\hllin{115\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{116\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{loadModel}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{);}\\
+\hllin{117\ }\hlstd{\\
+\hllin{118\ }}\hlstd{\ \ }\hlstd{}\hlslc{//\ Uncomment\ the\ following\ line\ if\ AJAX\ validation\ is\ }\Righttorque\\
+\hllin{119\ }\hlslc{}\hlstd{\ \ }\hlslc{needed}\\
+\hllin{120\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlslc{//\ \$this{-}\symbol {62}performAjaxValidation(\$model);}\\
+\hllin{121\ }\hlstd{\\
+\hllin{122\ }}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}))}\\
+\hllin{123\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{124\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{attributes}\hlopt{=}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]};}\\
+\hllin{125\ }\hlstd{}\hlstd{\ \ \ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{setModelPeoples}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{);}\\
+\hllin{126\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{scenario}\hlopt{=}\hlstd{}\hlstr{'update'}\hlstd{}\hlopt{;}\\
+\hllin{127\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{())}\\
+\hllin{128\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{redirect}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'view'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'id'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{));}\\
+\hllin{129\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{130\ }\hlstd{\\
+\hllin{131\ }}\hlstd{\ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{render}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'update'}\hlstd{}\hlopt{,}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{132\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'model'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{,}\\
+\hllin{133\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{));}\\
+\hllin{134\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{135\ }\hlstd{\\
+\hllin{136\ }\ }\hlcom{/{*}{*}}\\
+\hllin{137\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Deletes\ a\ particular\ model.}\\
+\hllin{138\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ If\ deletion\ is\ successful,\ the\ browser\ will\ be\ }\Righttorque\\
+\hllin{139\ }\hlcom{}\hlstd{\ \ }\hlcom{redirected\ to\ the\ 'admin'\ page.}\\
+\hllin{140\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @param\ integer\ \$id\ the\ ID\ of\ the\ model\ to\ be\ deleted}\\
+\hllin{141\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{142\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionDelete}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{)}\\
+\hllin{143\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{144\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{loadModel}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{){-}\symbol {62}}\hlstd{}\hlkwd{delete}\hlstd{}\hlopt{();}\\
+\hllin{145\ }\hlstd{\\
+\hllin{146\ }}\hlstd{\ \ }\hlstd{}\hlslc{//\ if\ AJAX\ request\ (triggered\ by\ deletion\ via\ admin\ grid\ }\Righttorque\\
+\hllin{147\ }\hlslc{}\hlstd{\ \ }\hlslc{view),\ we\ should\ not\ redirect\ the\ browser}\\
+\hllin{148\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(!}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'ajax'}\hlstd{}\hlopt{{]}))}\\
+\hllin{149\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{redirect}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'returnUrl'}\hlstd{}\hlopt{{]})\ }\hlstd{?\ }\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\Righttorque\\
+\hllin{150\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'returnUrl'}\hlstd{}\hlopt{{]}\ :\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'admin'}\hlstd{}\hlopt{));}\\
+\hllin{151\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{152\ }\hlstd{\\
+\hllin{153\ }\ }\hlcom{/{*}{*}}\\
+\hllin{154\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Lists\ all\ models.}\\
+\hllin{155\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{156\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionIndex}\hlstd{}\hlopt{()}\\
+\hllin{157\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{158\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{CDbCriteria}\hlopt{;}\\
+\hllin{159\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{addCondition}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\symbol {95}school!=1'}\hlstd{}\hlopt{);}\\
+\hllin{160\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$dataProvider}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{new\ }\hlstd{}\hlkwd{CActiveDataProvider}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{,}\\
+\hllin{161\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'sort'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{162\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'defaultOrder'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{163\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}intl'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{164\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}NSF'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{165\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}973'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{166\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}863'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{167\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}is\symbol {95}NKTRD'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{168\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}major'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{169\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}provincial'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{170\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}city'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{171\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'is\symbol {95}enterprise'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{true}\hlopt{,}\\
+\hllin{172\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'start\symbol {95}date'}\hlstd{\ }\hlopt{=\symbol {62}\ }\hlstd{true}\hlopt{,}\\
+\hllin{173\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{174\ }\hlstd{\\
+\hllin{175\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{),}\\
+\hllin{176\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'pagination'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{false}\hlopt{,}\\
+\hllin{177\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'criteria'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$criteria}\\
+\hllin{178\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{));}\\
+\hllin{179\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{render}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'index'}\hlstd{}\hlopt{,}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{180\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'dataProvider'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$dataProvider}\hlstd{}\hlopt{,}\\
+\hllin{181\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{));}\\
+\hllin{182\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{183\ }\hlstd{\\
+\hllin{184\ }\ }\hlcom{/{*}{*}}\\
+\hllin{185\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Manages\ all\ models.}\\
+\hllin{186\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{187\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionAdmin}\hlstd{}\hlopt{()}\\
+\hllin{188\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{189\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{new\ }\hlstd{}\hlkwd{Project}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'search'}\hlstd{}\hlopt{);}\\
+\hllin{190\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{unsetAttributes}\hlstd{}\hlopt{();}\hlstd{\ \ }\hlopt{}\hlstd{}\hlslc{//\ clear\ any\ default\ values}\\
+\hllin{191\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}))\ \symbol {123}}\\
+\hllin{192\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{attributes}\hlopt{=}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]};}\\
+\hllin{193\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}intl'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{194\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}intl}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{195\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{196\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}national'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{197\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}national}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{198\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{199\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}provincial'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{200\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}provincial}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{201\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{202\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}school'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{203\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}school}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{204\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{205\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}city'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{206\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}city}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{207\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{208\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}enterprise'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{209\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}enterprise}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{210\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{211\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}NSF'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{212\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NSF}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{213\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{214\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}973'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{215\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}973}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{216\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{217\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}863'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{218\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}863}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{219\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{220\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}NKTRD'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{221\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NKTRD}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{222\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{223\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}DFME'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{224\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}DFME}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{225\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{226\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'Project'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'is\symbol {95}major'}\hlstd{}\hlopt{{]}==}\hlstd{}\hlstr{'0'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{227\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}major}\hlopt{=}\hlstd{}\hlstr{""}\hlstd{}\hlopt{;}\\
+\hllin{228\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{229\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$peopleNameArr}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{230\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(!}\hlstd{}\hlkwa{empty}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'execute\symbol {95}id'}\hlstd{}\hlopt{{]}))\symbol {123}}\\
+\hllin{231\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{=}\hlstd{People}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{{]}{[}}\Righttorque\\
+\hllin{232\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'execute\symbol {95}id'}\hlstd{}\hlopt{{]});}\\
+\hllin{233\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{searchExecutePeople}\hlopt{=}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{;}\\
+\hllin{234\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$peopleNameArr}\hlstd{}\hlopt{{[}{]}=}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name}\hlopt{;}\\
+\hllin{235\ }\hlstd{\\
+\hllin{236\ }}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{237\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(!}\hlstd{}\hlkwa{empty}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'liability\symbol {95}id'}\hlstd{}\hlopt{{]}))\symbol {123}}\\
+\hllin{238\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{=}\hlstd{People}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{{]}{[}}\Righttorque\\
+\hllin{239\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'liability\symbol {95}id'}\hlstd{}\hlopt{{]});}\\
+\hllin{240\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{searchExecutePeople}\hlopt{=}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{;}\\
+\hllin{241\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$peopleNameArr}\hlstd{}\hlopt{{[}{]}=}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name}\hlopt{;}\\
+\hllin{242\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{243\ }\hlstd{}\hlstd{\ \ \ }\hlstd{\\
+\hllin{244\ }}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{245\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(\ }\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'export'}\hlstd{}\hlopt{{]})\ \&\&\ }\hlstd{}\hlkwc{\$\symbol {95}GET}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'export'}\hlstd{}\hlopt{{]})\ \symbol {123}}\\
+\hllin{246\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$dataProvider}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{search}\hlstd{}\hlopt{();}\\
+\hllin{247\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$dataProvider}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pagination}\hlopt{=}\hlstd{false}\hlopt{;}\\
+\hllin{248\ }\hlstd{}\hlstd{\ \ \ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{exportProjectsToXlsByPeople}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$dataProvider}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{getData}\hlstd{}\hlopt{()}\Righttorque\\
+\hllin{249\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{,}\hlstd{}\hlstr{'参与者包括'}\hlstd{}\hlopt{.}\hlstd{}\hlkwd{implode}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'，\ '}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$peopleNameArr}\hlstd{}\hlopt{).}\Righttorque\\
+\hllin{250\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlstr{'的项目'}\hlstd{}\hlopt{);}\\
+\hllin{251\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}\ }\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{252\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{render}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'admin'}\hlstd{}\hlopt{,}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\\
+\hllin{253\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'model'}\hlstd{}\hlopt{=\symbol {62}}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{,}\\
+\hllin{254\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlopt{));}\\
+\hllin{255\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{256\ }\hlstd{\\
+\hllin{257\ }\ }\hlopt{\symbol {125}}\\
+\hllin{258\ }\hlstd{\\
+\hllin{259\ }\ }\hlcom{/{*}{*}}\\
+\hllin{260\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Returns\ the\ data\ model\ based\ on\ the\ primary\ key\ given\ in\ }\Righttorque\\
+\hllin{261\ }\hlcom{}\hlstd{\ \ }\hlcom{the\ GET\ variable.}\\
+\hllin{262\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ If\ the\ data\ model\ is\ not\ found,\ an\ HTTP\ exception\ will\ }\Righttorque\\
+\hllin{263\ }\hlcom{}\hlstd{\ \ }\hlcom{be\ raised.}\\
+\hllin{264\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @param\ integer\ \$id\ the\ ID\ of\ the\ model\ to\ be\ loaded}\\
+\hllin{265\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @return\ Project\ the\ loaded\ model}\\
+\hllin{266\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @throws\ CHttpException}\\
+\hllin{267\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{268\ }\ }\hlkwa{public\ function\ }\hlstd{}\hlkwd{loadModel}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{)}\\
+\hllin{269\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{270\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$id}\hlstd{}\hlopt{);}\\
+\hllin{271\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{===}\hlstd{null}\hlopt{)}\\
+\hllin{272\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{throw\ new\ }\hlstd{}\hlkwd{CHttpException}\hlstd{}\hlopt{(}\hlstd{}\hlnum{404}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'The\ requested\ page\ does\ not\ }\Righttorque\\
+\hllin{273\ }\hlstr{}\hlstd{\ \ \ }\hlstr{exist.'}\hlstd{}\hlopt{);}\\
+\hllin{274\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{;}\\
+\hllin{275\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{276\ }\hlstd{\\
+\hllin{277\ }\ }\hlcom{/{*}{*}}\\
+\hllin{278\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ Performs\ the\ AJAX\ validation.}\\
+\hllin{279\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}\ @param\ Project\ \$model\ the\ model\ to\ be\ validated}\\
+\hllin{280\ }\hlcom{}\hlstd{\ \ }\hlcom{{*}/}\hlstd{\\
+\hllin{281\ }\ }\hlkwa{protected\ function\ }\hlstd{}\hlkwd{performAjaxValidation}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{)}\\
+\hllin{282\ }\hlstd{\ }\hlopt{\symbol {123}}\\
+\hllin{283\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'ajax'}\hlstd{}\hlopt{{]})\ \&\&\ }\hlstd{}\hlkwc{\$\symbol {95}POST}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'ajax'}\hlstd{}\hlopt{{]}===}\hlstd{}\hlstr{'project{-}}\Righttorque\\
+\hllin{284\ }\hlstr{}\hlstd{\ \ }\hlstr{form'}\hlstd{}\hlopt{)}\\
+\hllin{285\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{286\ }\hlstd{}\hlstd{\ \ \ }\hlstd{}\hlkwa{echo\ }\hlstd{CActiveForm}\hlopt{::}\hlstd{}\hlkwd{validate}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$model}\hlstd{}\hlopt{);}\\
+\hllin{287\ }\hlstd{}\hlstd{\ \ \ }\hlstd{Yii}\hlopt{::}\hlstd{}\hlkwd{app}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{end}\hlstd{}\hlopt{();}\\
+\hllin{288\ }\hlstd{}\hlstd{\ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{289\ }\hlstd{\ }\hlopt{\symbol {125}}\\
+\hllin{290\ }\hlstd{\\
+\hllin{291\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionUpload}\hlstd{}\hlopt{()\ \symbol {123}}\\
+\hllin{292\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{set\symbol {95}time\symbol {95}limit}\hlstd{}\hlopt{(}\hlstd{}\hlnum{50}\hlstd{}\hlopt{);}\\
+\hllin{293\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{isset}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}FILES}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'spreedSheet'}\hlstd{}\hlopt{{]})\ \&\&\ !}\hlstd{}\hlkwa{empty}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$\symbol {95}FILES}\hlstd{}\hlopt{{[}}\Righttorque\\
+\hllin{294\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'spreedSheet'}\hlstd{}\hlopt{{]}))\ \symbol {123}}\\
+\hllin{295\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$path\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwc{\$\symbol {95}FILES}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'spreedSheet'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'tmp\symbol {95}name'}\hlstd{}\hlopt{{]};}\\
+\hllin{296\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{echo\ }\hlstd{}\hlkwc{\$\symbol {95}FILES}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'spreedSheet'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{{]}.}\hlstd{}\hlstr{"\symbol {60}hr\ /\symbol {62}"}\hlstd{}\hlopt{;}\\
+\hllin{297\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{echo\ }\hlstd{}\hlkwc{\$\symbol {95}FILES}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'spreedSheet'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'type'}\hlstd{}\hlopt{{]}.}\hlstd{}\hlstr{"\symbol {60}hr\ /\symbol {62}"}\hlstd{}\hlopt{;}\\
+\hllin{298\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{echo\ }\hlstd{}\hlkwc{\$\symbol {95}FILES}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'spreedSheet'}\hlstd{}\hlopt{{]}{[}}\hlstd{}\hlstr{'tmp\symbol {95}name'}\hlstd{}\hlopt{{]}.}\hlstd{}\hlstr{"\symbol {60}hr\ /\symbol {62}"}\hlstd{}\hlopt{;}\\
+\hllin{299\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{saveXlsToDb}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$path}\hlstd{}\hlopt{))\symbol {123}}\\
+\hllin{300\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{echo\ }\hlstd{}\hlstr{'function\ actionUpload()\ succeeded.\symbol {60}hr\ }\Righttorque\\
+\hllin{301\ }\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{/\symbol {62}'}\hlstd{}\hlopt{;}\\
+\hllin{302\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{redirect}\hlstd{}\hlopt{(}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'index'}\hlstd{}\hlopt{));}\\
+\hllin{303\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{304\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{305\ }\hlstd{\\
+\hllin{306\ }\\
+\hllin{307\ }}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{render}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'upload'}\hlstd{}\hlopt{);}\\
+\hllin{308\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{309\ }\hlstd{\\
+\hllin{310\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{actionReset}\hlstd{}\hlopt{()\ \symbol {123}}\\
+\hllin{311\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{deleteAll}\hlstd{}\hlopt{();}\\
+\hllin{312\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{313\ }\hlstd{\\
+\hllin{314\ }\\
+\hllin{315\ }\\
+\hllin{316\ }\\
+\hllin{317\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{protected\ function\ }\hlstd{}\hlkwd{saveXlsToDb}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$xlsPath}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{318\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$projects\ }\hlstd{}\hlopt{=\ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{xlsToArray}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$xlsPath}\hlstd{}\hlopt{);}\\
+\hllin{319\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{saveXlsArrayToDb}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$projects}\hlstd{}\hlopt{);}\\
+\hllin{320\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{321\ }\hlstd{\\
+\hllin{322\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{xlsToArray}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$path}\hlstd{}\hlopt{)}\\
+\hllin{323\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{324\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{Yii}\hlopt{::}\hlstd{}\hlkwd{trace}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"start\ of\ loading"}\hlstd{}\hlopt{,}\hlstd{}\hlstr{"actionTestXls()"}\hlstd{}\hlopt{);}\\
+\hllin{325\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$reader\ }\hlstd{}\hlopt{=\ }\hlstd{PHPExcel\symbol {95}IOFactory}\hlopt{::}\hlstd{}\hlkwd{createReader}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'Excel5'}\hlstd{}\hlopt{);}\\
+\hllin{326\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$reader}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{setReadDataOnly}\hlstd{}\hlopt{(}\hlstd{true}\hlopt{);}\\
+\hllin{327\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objPHPExcel\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwc{\$reader}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{load}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$path}\hlstd{}\hlopt{);}\\
+\hllin{328\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{Yii}\hlopt{::}\hlstd{}\hlkwd{trace}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"end\ of\ loading"}\hlstd{}\hlopt{,}\hlstd{}\hlstr{"actionTestXls()"}\hlstd{}\hlopt{);}\\
+\hllin{329\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{Yii}\hlopt{::}\hlstd{}\hlkwd{trace}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"start\ of\ reading"}\hlstd{}\hlopt{,}\hlstd{}\hlstr{"actionTestXls()"}\hlstd{}\hlopt{);}\\
+\hllin{330\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$dataArray\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwc{\$objPHPExcel}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{getActiveSheet}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{toArray}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{331\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{null}\hlopt{,}\hlstd{true}\hlopt{,}\hlstd{true}\hlopt{);}\\
+\hllin{332\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{Yii}\hlopt{::}\hlstd{}\hlkwd{trace}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"end\ of\ reading"}\hlstd{}\hlopt{,}\hlstd{}\hlstr{"actionTestXls()"}\hlstd{}\hlopt{);}\\
+\hllin{333\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{array\symbol {95}shift}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$dataArray}\hlstd{}\hlopt{);}\\
+\hllin{334\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//var\symbol {95}dump(\$dataArray);}\\
+\hllin{335\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlkwc{\$dataArray}\hlstd{}\hlopt{;}\\
+\hllin{336\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{337\ }\hlstd{\\
+\hllin{338\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{private\ function\ }\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$yesno}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{339\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$yesno}\hlstd{}\hlopt{==}\hlstd{}\hlstr{'是'}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{340\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlnum{1}\hlstd{}\hlopt{;}\\
+\hllin{341\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\hlstd{}\hlkwa{else\ if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$yesno}\hlstd{}\hlopt{==}\hlstd{}\hlstr{'否'}\hlstd{}\hlopt{)\symbol {123}}\\
+\hllin{342\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlnum{0}\hlstd{}\hlopt{;}\\
+\hllin{343\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{344\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlnum{0}\hlstd{}\hlopt{;}\\
+\hllin{345\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{346\ }\hlstd{\\
+\hllin{347\ }\\
+\hllin{348\ }\\
+\hllin{349\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{saveXlsArrayToDb}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$projects}\hlstd{}\hlopt{)}\\
+\hllin{350\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{351\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$connection}\hlstd{}\hlopt{=}\hlstd{Yii}\hlopt{::}\hlstd{}\hlkwd{app}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{db}\hlopt{;}\\
+\hllin{352\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//var\symbol {95}dump(\$projects);}\\
+\hllin{353\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{foreach}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$projects\ }\hlstd{}\hlkwa{as\ }\hlstd{}\hlkwc{\$k\ }\hlstd{}\hlopt{=\symbol {62}\ }\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{354\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//var\symbol {95}dump(\$k);}\\
+\hllin{355\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//var\symbol {95}dump(\$p);}\\
+\hllin{356\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$k}\hlstd{}\hlopt{\symbol {60}}\hlstd{}\hlnum{2}\hlstd{}\hlopt{)\ }\hlstd{}\hlkwa{continue}\hlstd{}\hlopt{;}\\
+\hllin{357\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{Project}\hlopt{;}\\
+\hllin{358\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name}\hlopt{=}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{0}\hlstd{}\hlopt{{]};}\\
+\hllin{359\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{number}\hlopt{=}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{1}\hlstd{}\hlopt{{]};}\\
+\hllin{360\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{fund\symbol {95}number}\hlopt{=}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{2}\hlstd{}\hlopt{{]};}\\
+\hllin{361\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}intl}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{3}\hlstd{}\hlopt{{]});}\\
+\hllin{362\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}national}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\Righttorque\\
+\hllin{363\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlnum{4}\hlstd{}\hlopt{{]});}\\
+\hllin{364\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}provincial}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{365\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{5}\hlstd{}\hlopt{{]});}\\
+\hllin{366\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}city}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{6}\hlstd{}\hlopt{{]});}\\
+\hllin{367\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}school}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{7}\hlstd{}\hlopt{{]}}\Righttorque\\
+\hllin{368\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{);}\\
+\hllin{369\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}enterprise}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{370\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{8}\hlstd{}\hlopt{{]});}\\
+\hllin{371\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NSF}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{9}\hlstd{}\hlopt{{]});}\\
+\hllin{372\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}973}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{10}\hlstd{}\hlopt{{]});}\\
+\hllin{373\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}863}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{11}\hlstd{}\hlopt{{]});}\\
+\hllin{374\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}NKTRD}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{12}\hlstd{}\hlopt{{]}}\Righttorque\\
+\hllin{375\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{);}\\
+\hllin{376\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}DFME}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{13}\hlstd{}\hlopt{{]})}\Righttorque\\
+\hllin{377\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{;}\\
+\hllin{378\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{is\symbol {95}major}\hlopt{=}\hlstd{self}\hlopt{::}\hlstd{}\hlkwd{convertYesNoToInt}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{14}\hlstd{}\hlopt{{]}}\Righttorque\\
+\hllin{379\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{);}\\
+\hllin{380\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{start\symbol {95}date}\hlopt{=(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{16}\hlstd{}\hlopt{{]});}\\
+\hllin{381\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{deadline\symbol {95}date}\hlopt{=(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{17}\hlstd{}\hlopt{{]});}\\
+\hllin{382\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{conclude\symbol {95}date}\hlopt{=}\hlstd{}\hlkwa{empty}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{18}\hlstd{}\hlopt{{]})\ }\hlstd{?\ }\hlkwc{\$project}\hlstd{}\hlopt{{-}}\Righttorque\\
+\hllin{383\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {62}}\hlstd{deadline\symbol {95}date\ }\hlopt{:\ }\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{18}\hlstd{}\hlopt{{]};}\\
+\hllin{384\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}fund}\hlopt{=}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{19}\hlstd{}\hlopt{{]};}\\
+\hllin{385\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{386\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{=}\hlstd{}\hlnum{0}\hlstd{}\hlopt{;}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{\symbol {60}}\hlstd{}\hlnum{20}\hlstd{}\hlopt{;}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$i}\hlstd{+}\hlnum{1}\hlstd{}\hlopt{)\symbol {123}}\\
+\hllin{387\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{20}\hlstd{+}\hlkwc{\$i}\hlstd{}\hlopt{{]};}\\
+\hllin{388\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{=}\hlstd{}\hlkwd{mysql\symbol {95}real\symbol {95}escape\symbol {95}string}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{389\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{);}\\
+\hllin{390\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$sql}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'select\ id\ from\ tbl\symbol {95}people\ where\ }\Righttorque\\
+\hllin{391\ }\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{name="'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{.}\hlstd{}\hlstr{'";'}\hlstd{}\hlopt{;}\\
+\hllin{392\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$command}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$connection}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{createCommand}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$sql}\hlstd{}\hlopt{);}\\
+\hllin{393\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$row}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$command}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{queryRow}\hlstd{}\hlopt{();}\\
+\hllin{394\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$row}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{395\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{{[}{]}=}\hlstd{}\hlkwc{\$row}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'id'}\hlstd{}\hlopt{{]};}\\
+\hllin{396\ }\hlstd{\\
+\hllin{397\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{398\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$people\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{People}\hlopt{;}\\
+\hllin{399\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name\ }\hlopt{=\ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{;}\\
+\hllin{400\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(!}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{())\symbol {123}}\\
+\hllin{401\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{false}\hlopt{;}\\
+\hllin{402\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{403\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{{[}{]}\ =\ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{;}\\
+\hllin{404\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{405\ }\hlstd{\\
+\hllin{406\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{407\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{executePeoples\ }\hlopt{=\ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{;}\\
+\hllin{408\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{();}\\
+\hllin{409\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{for}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{=}\hlstd{}\hlnum{0}\hlstd{}\hlopt{;}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{\symbol {60}}\hlstd{}\hlnum{20}\hlstd{}\hlopt{;}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$i}\hlstd{+}\hlnum{1}\hlstd{}\hlopt{)\symbol {123}}\\
+\hllin{410\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{[}}\hlstd{}\hlnum{40}\hlstd{+}\hlkwc{\$i}\hlstd{}\hlopt{{]};}\\
+\hllin{411\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{=}\hlstd{}\hlkwd{mysql\symbol {95}real\symbol {95}escape\symbol {95}string}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{412\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{);}\\
+\hllin{413\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$sql}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'select\ id\ from\ tbl\symbol {95}people\ where\ }\Righttorque\\
+\hllin{414\ }\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{name="'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{.}\hlstd{}\hlstr{'";'}\hlstd{}\hlopt{;}\\
+\hllin{415\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$command}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$connection}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{createCommand}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$sql}\hlstd{}\hlopt{);}\\
+\hllin{416\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$row}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$command}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{queryRow}\hlstd{}\hlopt{();}\\
+\hllin{417\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$row}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{418\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{{[}{]}=}\hlstd{}\hlkwc{\$row}\hlstd{}\hlopt{{[}}\hlstd{}\hlstr{'id'}\hlstd{}\hlopt{{]};}\\
+\hllin{419\ }\hlstd{\\
+\hllin{420\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}\ }\hlstd{}\hlkwa{else\ }\hlstd{}\hlopt{\symbol {123}}\\
+\hllin{421\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$people\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{People}\hlopt{;}\\
+\hllin{422\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name\ }\hlopt{=\ }\hlstd{}\hlkwc{\$peopleName}\hlstd{}\hlopt{;}\\
+\hllin{423\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{if}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{())}\\
+\hllin{424\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{{[}{]}\ =\ }\hlstd{}\hlkwc{\$people}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{id}\hlopt{;}\\
+\hllin{425\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{426\ }\hlstd{\\
+\hllin{427\ }}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{428\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{liabilityPeoples\ }\hlopt{=\ }\hlstd{}\hlkwc{\$peoplesId}\hlstd{}\hlopt{;}\\
+\hllin{429\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{();}\\
+\hllin{430\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{431\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{true}\hlopt{;}\\
+\hllin{432\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{433\ }\hlstd{\\
+\hllin{434\ }}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{private\ function\ }\hlstd{}\hlkwd{exportProjectsToXlsByPeople}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$papers}\hlstd{}\hlopt{,}\Righttorque\\
+\hllin{435\ }\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$fileName}\hlstd{}\hlopt{=}\hlstd{}\hlstr{'export'}\hlstd{}\hlopt{)\symbol {123}}\\
+\hllin{436\ }\hlstd{\\
+\hllin{437\ }}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objPHPExcel\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{}\hlkwd{PHPExcel}\hlstd{}\hlopt{();}\\
+\hllin{438\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objPHPExcel}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{getProperties}\hlstd{}\hlopt{(){-}\symbol {62}}\hlstd{}\hlkwd{setTitle}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{439\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{"导出的科研项目"}\hlstd{}\hlopt{);}\\
+\hllin{440\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objPHPExcel}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{setActiveSheetIndex}\hlstd{}\hlopt{(}\hlstd{}\hlnum{0}\hlstd{}\hlopt{);}\\
+\hllin{441\ }\hlstd{\\
+\hllin{442\ }}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{=}\hlstd{}\hlnum{1}\hlstd{}\hlopt{;}\\
+\hllin{443\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwc{\$objPHPExcel}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{getActiveSheet}\hlstd{}\hlopt{();}\\
+\hllin{444\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{setTitle}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'papers'}\hlstd{}\hlopt{);}\\
+\hllin{445\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'A'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'编号'}\hlstd{}\hlopt{);}\\
+\hllin{446\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'B'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'名称'}\hlstd{}\hlopt{);}\\
+\hllin{447\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'C'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'经费本编号'}\hlstd{}\hlopt{);}\\
+\hllin{448\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'D'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'级别'}\hlstd{}\hlopt{);}\\
+\hllin{449\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'E'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'开始时间'}\hlstd{}\hlopt{);}\\
+\hllin{450\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'F'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'截至时间'}\hlstd{}\hlopt{);}\\
+\hllin{451\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'G'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'结题时间'}\hlstd{}\hlopt{);}\\
+\hllin{452\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'H'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'申报时间'}\hlstd{}\hlopt{);}\\
+\hllin{453\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'I'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'通过时间'}\hlstd{}\hlopt{);}\\
+\hllin{454\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'J'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'申报经费'}\hlstd{}\hlopt{);}\\
+\hllin{455\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'K'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'立项经费'}\hlstd{}\hlopt{);}\\
+\hllin{456\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'L'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\Righttorque\\
+\hllin{457\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'实际执行人员'}\hlstd{}\hlopt{);}\\
+\hllin{458\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'M'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'责任书人员'}\hlstd{}\hlopt{);}\\
+\hllin{459\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$i}\hlstd{++}\hlopt{;}\\
+\hllin{460\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{foreach}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$papers\ }\hlstd{}\hlkwa{as\ }\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{)\ \symbol {123}}\\
+\hllin{461\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'A'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{{-}}\hlstd{}\hlnum{1}\hlstd{}\hlopt{);}\\
+\hllin{462\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'B'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{name}\hlopt{);}\\
+\hllin{463\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'C'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{464\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{fund\symbol {95}number}\hlopt{);}\\
+\hllin{465\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'D'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{466\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{getLevelString}\hlstd{}\hlopt{());}\\
+\hllin{467\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'E'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{start\symbol {95}date}\hlopt{)}\Righttorque\\
+\hllin{468\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlopt{;}\\
+\hllin{469\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'F'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{470\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{deadline\symbol {95}date}\hlopt{);}\\
+\hllin{471\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'G'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{472\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{conclude\symbol {95}date}\hlopt{);}\\
+\hllin{473\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'H'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{app\symbol {95}date}\hlopt{);}\\
+\hllin{474\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'I'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}date}\hlopt{);}\\
+\hllin{475\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'J'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{app\symbol {95}fund}\hlopt{);}\\
+\hllin{476\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'K'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{pass\symbol {95}fund}\hlopt{);}\\
+\hllin{477\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'L'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{478\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{getExecutePeoples}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'，'}\hlstd{}\hlopt{));}\\
+\hllin{479\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$activeSheet}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{SetCellValue}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'M'}\hlstd{}\hlopt{.}\hlstd{}\hlkwc{\$i}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$p}\hlstd{}\hlopt{{-}\symbol {62}}\Righttorque\\
+\hllin{480\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{getLiabilityPeoples}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'，'}\hlstd{}\hlopt{));}\\
+\hllin{481\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$i}\hlstd{++}\hlopt{;}\\
+\hllin{482\ }\hlstd{\\
+\hllin{483\ }}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{484\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//http://stackoverflow.com/questions/19155488/array{-}}\Righttorque\\
+\hllin{485\ }\hlslc{}\hlstd{\ \ \ \ \ \ \ \ }\hlslc{to{-}excel{-}2007{-}using{-}phpexcel}\\
+\hllin{486\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objWriter\ }\hlstd{}\hlopt{=\ }\hlstd{}\hlkwa{new\ }\hlstd{}\hlkwd{PHPExcel\symbol {95}Writer\symbol {95}Excel2007}\hlstd{}\hlopt{(}\Righttorque\\
+\hllin{487\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objPHPExcel}\hlstd{}\hlopt{);}\\
+\hllin{488\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Pragma:\ public"}\hlstd{}\hlopt{);}\\
+\hllin{489\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Expires:\ 0"}\hlstd{}\hlopt{);}\\
+\hllin{490\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Cache{-}Control:must{-}revalidate,\ post{-}check=0,\ }\Righttorque\\
+\hllin{491\ }\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{pre{-}check=0"}\hlstd{}\hlopt{);}\\
+\hllin{492\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Content{-}Type:application/force{-}download"}\hlstd{}\hlopt{);}\\
+\hllin{493\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Content{-}Type:application/vnd.ms{-}excel"}\hlstd{}\hlopt{);}\\
+\hllin{494\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Content{-}Type:application/octet{-}stream"}\hlstd{}\hlopt{);}\\
+\hllin{495\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Content{-}Type:application/download"}\hlstd{}\hlopt{);;}\\
+\hllin{496\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlslc{//\$fileName\ =\ iconv('utf{-}8',\ "gb2312",\ \$fileName);}\\
+\hllin{497\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'Content{-}Disposition:attachment;filename="'}\hlstd{}\hlopt{.}\Righttorque\\
+\hllin{498\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$fileName}\hlstd{}\hlopt{.}\hlstd{}\hlstr{'.xlsx"'}\hlstd{}\hlopt{);}\\
+\hllin{499\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwd{header}\hlstd{}\hlopt{(}\hlstd{}\hlstr{"Content{-}Transfer{-}Encoding:binary"}\hlstd{}\hlopt{);}\\
+\hllin{500\ }\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwc{\$objWriter}\hlstd{}\hlopt{{-}\symbol {62}}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'php://output'}\hlstd{}\hlopt{);}\\
+\hllin{501\ }\hlstd{\\
+\hllin{502\ }}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\symbol {125}}\\
+\hllin{503\ }\hlstd{}\\
+\hllin{504\ }\hlopt{\symbol {125}}\hlstd{}\\
+\mbox{}
+\normalfont
+\normalsize

@@ -1,0 +1,709 @@
+% !Mode:: "TeX:UTF-8"
+
+\chapter{方案实现}
+
+\section{开发工具}
+
+\subsection{开发服务器搭建}
+
+在实现本系统之前，需要搭建出第~\pageref{lamp}~页的第~\ref{lamp}~节提出的LAMP服务器环境，然后在此开发环境下进行开发与调试。
+首先安装~Ubuntu 12.04 LTS~操作系统，Ubuntu是一个以桌面应用为主的GNU/Linux操作系统。打开终端，输入
+sudo apt-get install tasksel, 安装tasksel。tasksel是一个Debian下的安装任务套件，如果你为了使你的系统完成某一种常规功能，而需要安装多个软件包时，可以使用它进行方便快捷的安装。安装成功后打开tasksel，如~\ref{tasksel}~所示，选择LAMP Server，一个默认配置的LAMP服务器便搭建配置完毕了。
+\pic[hbtp]{利用tasksel工具安装配置LAMP开发服务器}{width=1.0\textwidth}{tasksel}
+此时，在浏览器中访问~http://localhost~就能够打开一个标题为“It works!”的默认网页，说明开发服务器已经正常运行了。 
+
+% \subsection{调试工具}
+% @TODO XDEBUG var\_dump()
+
+\subsection{版本控制工具}
+git是一个版本控制系统，用来保留工程源代码历史状态的命令行工具。可以利用它来追踪项目中的文件，并且得到某些时间点提交的项目状态。通过使用git，可以方便地在开发本系统的过程中，任意回溯到源码的不同版本上，提高开发效率，保证了源码库的安全。图~\ref{git}~展示了在开发本系统过程中的部分git日志，其中每个条目代表对代码库的一次提交，可以在不同的提交之间回溯。
+\pic[hbtp]{本系统开发过程中git的部分日志}{width=0.6\textwidth}{git}
+\section{数据库表实现}
+\subsection{数据库引擎选择}
+
+InnoDB和MyISAM是MySQL中最常用的两个数据库引擎。MyISAM是MySQL关系数据库管理系统的默认储存引擎。这种MySQL表存储结构从旧的ISAM代码扩展出许多有用的功能。InnoDB是MySQL的另一个存储引擎，正成为目前MySQL AB所发行新版的标准，被包含在所有二进制安装包里。较之于其它的存储引擎它的优点是它支持兼容ACID的事务（类似于PostgreSQL),以及参数完整性（对外键的约束）。在新版本的MySQL中，InnoDB引擎由于其对事务，参照完整性，以及更高的并发性等优点开始广泛的取代MyISAM。
+
+考虑到在本系统中，需要在各个数据管理模块的数据库表中保存一个维护者字段，在科研项目项目管理模块中为每个科研项目记录保存不定数量的人员，在论文管理模块中为每个项目记录保存不定数量的作者，以及在专利管理模块中为每个专利记录保存不定数量的发明人，需要使用到外键和创建额外的关系数据表，详见第页~\pageref{relation}~第~\ref{relation}~节所介绍的数据表关系；考虑到InnoDB对与参数完整性的支持能够很好的保证本系统数据的一致性和完整性,本系统中的所有数据库表选用InnoDB引擎。在MySQL中指定数据库引擎非常简单，只需要在创建数据库表的SQL语句中指定“ENGINE=InnoDB”
+
+\subsection{数据库字符集选择}
+\label{utf8}
+字符集是一套符号和编码的规则，不论是在Oracle数据库还是在MySQL数据库，都存在字符集的选择问题，而且如果在数据库创建阶段没有正确选择字符集，那么可能在后期需要更换字符集，而字符集的更换是代价比较高的操作，也存在一定的风险。
+
+UTF-8（8-bit Unicode Transformation Format）是一种针对Unicode的可变长度字符编码，是用以解决国际上字符的一种多字节编码，它对英文使用8位（即一个字节），中文使用24位（三个字节）来编码。UTF-8包含全世界所有国家需要用到的字符，是国际编码，通用性强。
+
+考虑到通用性和易用性，本系统中的所有数据库表选用UTF-8字符集。在MySQL中指定数据库字符集同样非常简单，只需要在创建数据库表的SQL语句中指定“DEFAULT CHARSET=utf8”
+
+
+\subsection{数据库表项实现}
+根据需求分析中提出的各数据管理模块需要实现存储的表项，在MySQL中分别创建了论文、专利、科研项目、人员四个数据库表。
+
+\subsubsection{论文}
+
+\threelinetable[H]{paperdatabase}{0.575\textwidth}{lcr}{tbl\_paper表的结构}
+{字段名称&数据类型&说明\\
+}{
+id&整型&主键，自动编号\\
+info&文本&论文信息，不能为空\\
+status&整形&状态\\
+pass\_date&日期&录用时间\\
+pub\_date&日期&发表时间\\
+index\_date&日期&检索时间\\
+sci\_number&变长字符串&SCI检索号\\
+ei\_number&变长字符串&EI检索号\\
+istp\_number&变长字符串&ISTP检索号\\
+is\_first\_grade&布尔&是否一级\\
+is\_core&布尔&是否核心\\
+is\_journal&布尔&是否期刊\\
+is\_conference&布尔&是否会议\\
+is\_intl&布尔&是否国际\\
+is\_domestic&布尔&是否国内\\
+file\_name&变长字符串&论文文件名\\
+file\_type&变长字符串&论文文件类型\\
+file\_content&二进制数据&论文文件数据\\
+is\_high\_level&布尔&是否高水平\\
+maintainer\_id&整形&维护人员id\\
+}{}
+表~\ref{paperdatabase}~给出了论文数据库表的结构，其中论文信息比较长，可能超过255个字符，因此采用MySQL中的“mediumtext”数据类型，其他变长字符串均采用“varchar(255)”数据类型，日期采用“date”数据类型，主键id与外键维护人员id采用“int(11)”数据类型，是否一级、是否核心等布尔字段均采用“tinyint(1)”型数据类型。综合上述各字段数据类型的选择，使用下面的SQL语句，在MySQL数据库中生成论文管理模块的数据库表。
+
+
+\noindent
+\ttfamily
+\hlstd{CREATE\ TABLE\ IF\ NOT\ EXISTS\ \textasciigrave tbl\textunderscore paper\textasciigrave \ (\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL\ AUTO\textunderscore INCREMENT,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave info\textasciigrave \ mediumtext\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave status\textasciigrave \ tinyint(}\hlnum{4}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave pass\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave pub\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave index\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave sci\textunderscore number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave ei\textunderscore number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave istp\textunderscore number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore first\textunderscore grade\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore core\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave other\textunderscore pub\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore journal\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore conference\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore intl\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore domestic\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave file\textunderscore name\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave file\textunderscore type\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave file\textunderscore size\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave file\textunderscore content\textasciigrave \ mediumblob\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore high\textunderscore level\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave maintainer\textunderscore id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{PRIMARY\ KEY\ (\textasciigrave id\textasciigrave ),\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{KEY\ \textasciigrave tbl\textunderscore paper\textunderscore ibfk\textunderscore 1\textasciigrave \ (\textasciigrave maintainer\textunderscore id\textasciigrave )\hspace*{\fill}\\
+)\ ENGINE=InnoDB}\hlstd{\ \ }\hlstd{DEFAULT\ CHARSET=utf8\ COLLATE=utf8\textunderscore bin;}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+
+\subsubsection{科研项目}
+\label{project}
+\threelinetable[H]{projectdatabase}{0.625\textwidth}{lcr}{tbl\_project表的结构}
+{字段名称&数据类型&说明\\
+}{
+id&&整型主键，自动编号\\
+name&变长字符串&项目名称\\
+number&变长字符串&编号\\
+fund\_number&变长字符串&经费本编号\\
+is\_intl&布尔&是否国际\\
+is\_national&布尔&是否国家级\\
+is\_provincial&布尔&是否省部级\\
+is\_city&布尔&是否市级\\
+is\_school&布尔&是否校级\\
+is\_enterprise&布尔&是否横向\\
+is\_NSF&布尔&是否国家自然基金\\
+is\_973&布尔&973\\
+is\_863&布尔&863\\
+is\_NKTRD&布尔&是否科技支撑计划\\
+is\_DFME&布尔&是否教育部博士点专项基金\\
+is\_major&布尔&是否重大专项\\
+start\_date&日期&开始时间\\
+deadline\_date&日期&截至时间\\
+conclude\_date&日期&结题时间\\
+app\_date&日期&申报时间\\
+pass\_date&日期&立项时间\\
+app\_fund&货币&申报经费\\
+pass\_fund&货币&立项经费\\
+}{}
+
+
+表~\ref{projectdatabase}~给出了科研项目数据库表的结构，其中所有类型为变长字符串均的字段均采用MySQL中的“varchar(255)”数据类型，日期采用“date”数据类型，主键id与外键维护人员id采用“int(11)”数据类型，是否国际、是否国家级等类型为布尔的字段均采用“tinyint(1)”型数据类型；申报经费、立项经费不使用字符串类型或浮点类型存储，而是采用整数部分为15位，小数部分为2位的数值类型存储，方便比较和计算，且没有误差，在MySQL对应“decimal(15,2)”数据类型。综合上述各字段数据类型的选择，使用下面的SQL语句，在MySQL数据库中生成科研项目管理模块的数据库表。
+
+\noindent
+\ttfamily
+\hlstd{CREATE\ TABLE\ IF\ NOT\ EXISTS\ \textasciigrave tbl\textunderscore project\textasciigrave \ (\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL\ AUTO\textunderscore INCREMENT,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave name\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave fund\textunderscore number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore intl\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore national\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore provincial\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore city\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore school\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore enterprise\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore NSF\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore 973\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore 863\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore NKTRD\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore DFME\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore major\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave start\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave deadline\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave conclude\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave app\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave pass\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave app\textunderscore fund\textasciigrave \ decimal(}\hlnum{15}\hlstd{,}\hlnum{2}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave pass\textunderscore fund\textasciigrave \ decimal(}\hlnum{15}\hlstd{,}\hlnum{2}\hlstd{)\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{PRIMARY\ KEY\ (\textasciigrave id\textasciigrave )\hspace*{\fill}\\
+)\ ENGINE=InnoDB}\hlstd{\ \ }\hlstd{DEFAULT\ CHARSET=utf8\ COLLATE=utf8\textunderscore bin;}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+
+\subsubsection{专利}
+
+\threelinetable[H]{peopledatabase}{0.5\textwidth}{lcr}{tbl\_people表的结构}
+{字段名称&数据类型&说明\\
+}{
+id&整形&主键，自动编号\\
+name&变长字符串&专利名称\\
+app\_date&日期&申请时间\\
+app\_number&变长字符串&申请号\\
+auth\_date&日期&授权时间\\
+auth\_number&变长字符串&授权号\\
+is\_intl&布尔&是否国际\\
+is\_domestic&布尔&是否国内\\
+abstract&变长字符串&专利摘要\\
+}{}
+
+表~\ref{peopledatabase}~给出了专利数据库表的结构，其中所有类型为变长字符串均的字段均采用MySQL中的“varchar(255)”数据类型，日期采用“date”数据类型，主键id“int(11)”数据类型，是否国际、是否国家级等类型为布尔的字段均采用“tinyint(1)”型数据类型；申报经费、立项经费不使用字符串类型或浮点类型存储，而是采用整数部分为15位，小数部分为2位的数值类型存储，方便比较和计算，且没有误差，在MySQL对应“decimal(15,2)”数据类型。综合上述各字段数据类型的选择，使用下面的SQL语句，在MySQL数据库中生成专利模块的数据库表。
+
+
+\noindent
+\ttfamily
+\hlstd{CREATE\ TABLE\ IF\ NOT\ EXISTS\ \textasciigrave tbl\textunderscore patent\textasciigrave \ (\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL\ AUTO\textunderscore INCREMENT,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave name\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave app\textunderscore date\textasciigrave \ date\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave app\textunderscore number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave auth\textunderscore number\textasciigrave \ varchar(}\hlnum{255}\hlstd{)\ COLLATE\ utf8\textunderscore bin\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave auth\textunderscore date\textasciigrave \ date\ DEFAULT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore intl\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave is\textunderscore domestic\textasciigrave \ tinyint(}\hlnum{1}\hlstd{)\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave abstract\textasciigrave \ text\ COLLATE\ utf8\textunderscore bin\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{PRIMARY\ KEY\ (\textasciigrave id\textasciigrave )\hspace*{\fill}\\
+)\ ENGINE=InnoDB}\hlstd{\ \ }\hlstd{DEFAULT\ CHARSET=utf8\ COLLATE=utf8\textunderscore bin;}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+
+\subsubsection{人员}
+
+\threelinetable[H]{peopledatabase}{0.5\textwidth}{lcr}{tbl\_people表的结构}
+{字段名称&数据类型&说明\\
+}{
+id&整形&主键，自动编号\\
+name&变长字符串&姓名\\
+name\_zh&日期&姓名拼音或英文名\\
+type&布尔&教师或者学生\\
+description&变长字符串&介绍\\
+}{}
+
+% CREATE TABLE IF NOT EXISTS `tbl_people` (
+%   `id` int(11) NOT NULL AUTO_INCREMENT,
+%   `name` varchar(255) COLLATE utf8_bin NOT NULL,
+%   `name` varchar(255) COLLATE utf8_bin,
+%   `type` tinyint(1),
+%   `description` varchar(255),
+%   PRIMARY KEY (`id`)
+% ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+%
+表~\ref{peopledatabase}~给出了人员数据库表的结构，其中所有类型为变长字符串均的字段均采用MySQL中的“varchar(255)”数据类型,主键id“int(11)”数据类型，type字段采用“tinyint(1)”型数据类型；综合上述各字段数据类型的选择，使用下面的SQL语句，在MySQL数据库中生成人员模块的数据库表。
+
+\noindent
+\ttfamily
+\hlstd{CREATE\ TABLE\ }\hlkwa{IF\ }\hlstd{NOT\ EXISTS\ `tbl\textunderscore people`\ }\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{`id`\ }\hlkwb{int}\hlstd{}\hlopt{(}\hlstd{}\hlnum{11}\hlstd{}\hlopt{)\ }\hlstd{NOT\ NULL\ AUTO\textunderscore INCREMENT}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{`name`\ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{)\ }\hlstd{COLLATE\ utf8\textunderscore bin\ NOT\ NULL}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{`name`\ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{)\ }\hlstd{COLLATE\ utf8\textunderscore bin}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{`type`\ }\hlkwd{tinyint}\hlstd{}\hlopt{(}\hlstd{}\hlnum{1}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{`description`\ }\hlkwd{varchar}\hlstd{}\hlopt{(}\hlstd{}\hlnum{255}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ }\hlstd{PRIMARY\ }\hlkwd{KEY\ }\hlstd{}\hlopt{(}\hlstd{`id`}\hlopt{)}\hspace*{\fill}\\
+\hlstd{}\hlopt{)\ }\hlstd{ENGINE}\hlopt{=}\hlstd{InnoDB}\hlstd{\ \ }\hlstd{}\hlkwa{DEFAULT\ }\hlstd{CHARSET}\hlopt{=}\hlstd{utf8\ COLLATE}\hlopt{=}\hlstd{utf8\textunderscore bin}\hlopt{;}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+
+\subsection{数据表关系}
+\label{relation}
+在科研项目管理中，需要存储和维护不定数目的项目参与人员，科研项目和参与人员之间存在着多对多的关系。在这里显然不能直接在科研项目的数据表中添加若干个字段，存储人员的id；而是要单独建立一个数据表，存储项目和参与人员之间的关系，这样才能满足数据库第二范式，保持数据有效性，节约存储空间。
+
+所谓数据库第二范式（2NF），它要求实体的属性完全依赖于主关键字。所谓完全依赖是指不能存在仅依赖主关键字一部分的属性，如果存在，那么这个属性和主关键字的这一部分应该分离出来形成一个新的实体，新实体与原实体之间是一对多的关系。为实现区分通常需要为表加上一个列，以存储各个实例的惟一标识。简而言之，第二范式就是属性完全依赖于主键。
+
+表~\ref{projectpeopledb}~给出了存储科研项目与实际执行人员的关系的数据表结构。这样在查找某一个科研项目记录的时候，只需要在存储科研项目与实际执行人员的关系的数据表中找到满足科研项目id等于当前科研项目记录id，就可以得到该项目的所有实际执行人员id（可能有多个），再依次地按照这些际执行人员id在人员数据表中查找，便可以得到某一个科研项目的所有实际执行人员。
+
+\threelinetable[H]{projectpeopledb}{0.6\textwidth}{lcr}{tbl\_project\_people\_execute表的结构}
+{字段名称&数据类型&说明\\
+}{
+project\_id&整形&科研项目id，外键，不能为空\\
+people\_id&整形&人员id，外键，不能为空\\
+seq&整形&人员在单个项目中的顺序\\
+}{}
+
+
+使用下面的SQL语句生成存储科研项目与实际执行人员的关系的数据表:
+
+\noindent
+\ttfamily
+\hlstd{CREATE\ TABLE\ IF\ NOT\ EXISTS\ \textasciigrave tbl\textunderscore project\textunderscore people\textunderscore execute\textasciigrave \ (\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave project\textunderscore id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave people\textunderscore id\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{\textasciigrave seq\textasciigrave \ int(}\hlnum{11}\hlstd{)\ NOT\ NULL,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{PRIMARY\ KEY\ (\textasciigrave project\textunderscore id\textasciigrave ,\textasciigrave people\textunderscore id\textasciigrave ),\hspace*{\fill}\\
+)\ ENGINE=InnoDB\ DEFAULT\ CHARSET=utf8\ COLLATE=utf8\textunderscore bin;}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+使用下面的SQL语句给该数据表添加外键限制，以增强本系统数据的有效性和一致性：
+
+\noindent
+\ttfamily
+\hlstd{ALTER\ TABLE\ \textasciigrave tbl\textunderscore project\textunderscore people\textunderscore execute\textasciigrave \hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{ADD\ CONSTRAINT\ \textasciigrave tbl\textunderscore project\textunderscore people\textunderscore execute\textunderscore ibfk\textunderscore 1\textasciigrave \ \hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{FOREIGN\ KEY\ (\textasciigrave project\textunderscore id\textasciigrave )\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{REFERENCES\ \textasciigrave tbl\textunderscore project\textasciigrave \ (\textasciigrave id\textasciigrave )\ ON\ DELETE\ CASCADE\ ON\ \Righttorque\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{UPDATE\ CASCADE,\hspace*{\fill}\\
+}\hlstd{\ \ }\hlstd{ADD\ CONSTRAINT\ \textasciigrave tbl\textunderscore project\textunderscore people\textunderscore execute\textunderscore ibfk\textunderscore 2\textasciigrave \hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{FOREIGN\ KEY\ (\textasciigrave people\textunderscore id\textasciigrave )\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{REFERENCES\ \textasciigrave tbl\textunderscore people\textasciigrave \ (\textasciigrave id\textasciigrave )\ ON\ DELETE\ CASCADE\ ON\ \Righttorque\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{UPDATE\ CASCADE;}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+通过使用SQL的“JOIN”命令，可以从存储科研项目与实际执行人员的关系的数据表中得到某个项目的实际执行人员。例如，下面的SQL查询得到id为1的科研项目实际执行人员：
+
+\noindent
+\ttfamily
+\hlstd{SELECT\ \textasciigrave execute\textunderscore \textasciigrave .\textasciigrave id\textasciigrave \ AS\ \textasciigrave t1\textunderscore c0\textasciigrave ,\ \textasciigrave execute\textunderscore \textasciigrave .\textasciigrave name\textasciigrave \ AS\hspace*{\fill}\\
+\textasciigrave t1\textunderscore c1\textasciigrave \ FROM\ \textasciigrave tbl\textunderscore people\textasciigrave \ \textasciigrave execute\textunderscore \textasciigrave }\hlstd{\ \ }\hlstd{INNER\ JOIN\hspace*{\fill}\\
+\textasciigrave tbl\textunderscore project\textunderscore people\textunderscore execute\textasciigrave \ \textasciigrave execute\textunderscore peoples\textunderscore execute\textunderscore \textasciigrave \ ON\hspace*{\fill}\\
+(\textasciigrave execute\textunderscore peoples\textunderscore execute\textunderscore \textasciigrave .\textasciigrave project\textunderscore id\textasciigrave =}\hlnum{1}\hlstd{)\ AND\hspace*{\fill}\\
+(\textasciigrave execute\textunderscore \textasciigrave .\textasciigrave id\textasciigrave =\textasciigrave execute\textunderscore peoples\textunderscore execute\textunderscore \textasciigrave .\textasciigrave people\textunderscore id\textasciigrave )\ \Righttorque\hspace*{\fill}\\
+ORDER\ BY\hspace*{\fill}\\
+execute\textunderscore peoples\textunderscore execute\textunderscore .seq;}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+% SELECT `execute_`.`id` AS `t1_c0`, `execute_`.`name` AS
+% `t1_c1` FROM `tbl_people` `execute_`  INNER JOIN
+% `tbl_project_people_execute` `execute_peoples_execute_` ON
+% (`execute_peoples_execute_`.`project_id`=1) AND
+% (`execute_`.`id`=`execute_peoples_execute_`.`people_id`) ORDER BY
+% execute_peoples_execute_.seq;
+
+
+同样地，在本系统中，还需要分别存储和维护科研项目与责任书人员的关系、科研项目与维护人员的关系、论文与作者的关系、论文与维护人员的关系、发明和发明人的关系，皆采用类似上述建立一个关系数据库表的方式来实现，限于篇幅关系，在这里不再赘述。
+
+\section{模型实现}
+
+在本小节中，将介绍数据表项最多，数据关系最复杂的科研项目模型的实现，人员模型、论文模型、专利模型的实现方法与科研项目模型相类似，在这里不再赘述。
+
+Yii框架提供了易用的AR(Active Record)实现，AR 是一个流行的 对象-关系映射 (ORM) 技术。 每个 AR 类代表一个数据表（或视图），数据表（或视图）的列在 AR 类中体现为类的属性，一个 AR 实例则表示表中的一行。 常见的 CRUD 操作作为 AR 的方法实现。在本系统中，使用AR技术来实现各个模型。
+
+\subsection{建立数据库连接}
+
+AR 依靠一个数据库连接以执行数据库相关的操作。在Yii框架目录下的config.php中按照下面的PHP代码配置数据库链接。其中，host是MySQL服务器的地址，在开发服务器上，即为本机，填写本地环回地址；dbname为MySQL中存储本系统的数据库名称，根据需要填写，在开发服务器上填写为testdrive；username和password分别为mysql的密码；charset填写在第~\pageref{utf8}页~第~\ref{utf8}~节中选择的utf-8。
+
+% return array(
+% 	//其它配置
+%     'db'=>array(
+% 			'connectionString' => 'mysql:host=127.0.0.1;dbname=testdrive',
+% 			'emulatePrepare' => true,
+% 			'username' => 'root',
+% 			'password' => 'test',
+% 			'charset' => 'utf8',
+% 		),
+% );
+
+\noindent
+\ttfamily
+\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlslc{//其它配置}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlstr{'db'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'connectionString'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{}\hlstr{'mysql:host=127.0.0.1;}\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{dbname=testdrive'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'emulatePrepare'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{true}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'username'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{}\hlstr{'root'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'password'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{}\hlstr{'test'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'charset'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{}\hlstr{'utf8'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlopt{);}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\subsection{定义AR类}
+
+Yii~框架提供了一个名为~CActiveRecord~的~AR~类，如下面的~PHP~代码所示：让科研项目模型类~Project~继承自~CActiveRecord~类，并复写父类的~tableName()~方法，使它返回我们存储科研项目的数据库表的名称，即“tbl\_project”，便可以使用~CActiveRecord~提供的接口以面向对象的方式对科研项目的数据库表进行增加、删除、修改、查询了。
+
+\noindent
+\ttfamily
+\hlstd{}\hlkwa{class\ }\hlstd{Project\ }\hlkwa{extends\ }\hlstd{CActiveRecord}\hspace*{\fill}\\
+\hlopt{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{tableName}\hlstd{}\hlopt{()}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{return\ }\hlstd{}\hlstr{'tbl\textunderscore project'}\hlstd{}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{\}}\hspace*{\fill}\\
+\hlstd{｝}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+%
+% class Project extends CActiveRecord
+% {
+% 	public function tableName()
+% 	{
+% 		return 'tbl_project';
+% 	}
+% ｝
+%
+%
+% $project=new Project;
+% $project->name='项目名称';
+% //对其他字段进行赋值
+% $project->save();
+%
+% // 查找满足指定条件的结果中的第一行
+% $project=Project::model()->find($condition,$params);
+% // 查找具有指定主键值的那一行
+% $project=Project::model()->findByPk($projectID,$condition,$params);
+% // 查找具有指定属性值的行
+% $project=Project::model()->findByAttributes($attributes,$condition,$params);
+% // 通过指定的 SQL 语句查找结果中的第一行
+% $project=Project::model()->findBySql($sql,$params);
+%
+% $projects=Project::model()->findAll($condition,$params);
+% // 查找带有指定主键的所有行
+% $projects=Project::model()->findAllByPk($projectIDs,$condition,$params);
+% // 查找带有指定属性值的所有行
+% $projects=Project::model()->findAllByAttributes($attributes,$condition,$params);
+% // 通过指定的SQL语句查找所有行
+% $projects=Project::model()->findAllBySql($sql,$params);
+%
+% $project=Project::model()->findByPk(10);
+% $project->name='新的项目名称';
+% $project->save(); // 将更改保存到数据库
+%
+% $project=Project::model()->findByPk(10); // 假设有一个科研项目，其 ID 为 10
+% $project->delete(); // 从数据表中删除此行
+%
+% // 删除符合指定条件的行
+% Project::model()->deleteAll($condition,$params);
+% // 删除符合指定条件和主键的行
+% Project::model()->deleteByPk($pk,$condition,$params);
+
+\subsection{实现增删操作}
+增删改查操作指对数据库表记录的增加、删除、修改和查询，在本系统的控制器层中，可以使用面向对象的方式对科研项目的数据库表进行操作了：
+\begin{enumerate}
+\item 增加新的科研项目的条目：\\
+\noindent
+\ttfamily
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{new\ }\hlstd{Project}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{name}\hlopt{=}\hlstd{}\hlstr{'项目名称'}\hlstd{}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlslc{//对其他字段进行赋值}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{();}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+\item 对现有科研项目的条目进行查询：\\
+\noindent
+\ttfamily
+\hlstd{}\hlslc{//\ 查找满足指定条件的结果中的第一行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{find}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 查找具有指定主键值的那一行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$projectID}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 查找具有指定属性值的行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findByAttributes}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$attributes}\hlstd{}\hlopt{,}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 通过指定的\ SQL\ 语句查找结果中的第一行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findBySql}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$sql}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\hlkwc{\$projects}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findAll}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 查找带有指定主键的所有行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$projects}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findAllByPk}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$projectIDs}\hlstd{}\hlopt{,}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 查找带有指定属性值的所有行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$projects}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findAllByAttributes}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$attributes}\hlstd{}\hlopt{,}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 通过指定的SQL语句查找所有行}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$projects}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findAllBySql}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$sql}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\item 对现有科研项目的条目进行修改：\\
+\noindent
+\ttfamily
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlnum{10}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{name}\hlopt{=}\hlstd{}\hlstr{'新的项目名称'}\hlstd{}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{save}\hlstd{}\hlopt{();\ }\hlstd{}\hlslc{//\ 将更改保存到数据库}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\item 对现有科研项目的条目进行删除：\\
+\noindent
+\ttfamily
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlnum{10}\hlstd{}\hlopt{);\ }\hlstd{}\hlslc{//\ }\Righttorque\hspace*{\fill}\\
+\hlslc{假设有一个科研项目，其\ ID\ 为\ 10}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{delete}\hlstd{}\hlopt{();\ }\hlstd{}\hlslc{//\ 从数据表中删除此行}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\hlslc{//\ 删除符合指定条件的行}\hspace*{\fill}\\
+\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{deleteAll}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//\ 删除符合指定条件和主键的行}\hspace*{\fill}\\
+\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{deleteByPk}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$pk}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$condition}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$params}\hlstd{}\hlopt{);}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\end{enumerate}
+
+\subsection{定义数据库表关系}
+在上一节中，已经实现了使用 Active Record (AR) 从单个数据表对条目进行增删改查的操作。 在本节中，将使用 AR 连接多个相关数据表并取回关联（对应MySQL中的“JOIN”语句）后的数据表。
+
+在使用 AR 执行关联查询之前，需要让 AR 知道一个 AR 类是怎样关联到另一个的。
+
+两个 AR 类之间的关系直接通过 AR 类所代表的数据表之间的关系相关联。在 AR 中，定义了三种关系类型：
+\begin{enumerate}
+\item BELONGS\_TO：一对多
+\item HAS\_MANY：多对一
+\item MANY\_MANY:多对多
+\end{enumerate}
+
+在本系统的科研项目管理模块中，科研项目与维护者之间的关系是多对一，而科研项目与执行人员之间的关系是多对多。
+
+如下面的PHP代码所示，通过在Project类中复写父类~AR~中定义关系的~relations()~方法,可以定义科研项目与其它数据库表的关系。
+
+% public function relations()
+% {
+% 	return array(
+% 		'liability_peoples' => array(
+% 			self::MANY_MANY, 
+% 			'People', 
+% 			'tbl_project_people_liability(project_id, people_id)',
+% 			'order'=>'liability_peoples_liability_.seq',
+% 			'alias'=>'liability_'
+% 		),
+%         'execute_peoples' => array(
+%         	self::MANY_MANY, 
+%         	'People', 
+%         	'tbl_project_people_execute(project_id, people_id)',
+%         	'order'=>'execute_peoples_execute_.seq',
+%         	'alias'=>'execute_'
+%         ),
+% 	);
+
+% }
+\noindent
+\ttfamily
+\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{relations}\hlstd{}\hlopt{()}\hspace*{\fill}\\
+\hlstd{}\hlopt{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'liability\textunderscore peoples'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{self}\hlopt{::}\hlstd{MANY\textunderscore MANY}\hlopt{,\ }\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{,\ }\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'tbl\textunderscore project\textunderscore people\textunderscore liability(project\textunderscore id,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{people\textunderscore id)'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'order'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlstr{'liability\textunderscore peoples\textunderscore liability\textunderscore .seq'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'alias'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlstr{'liability\textunderscore '}\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'execute\textunderscore peoples'}\hlstd{\ }\hlopt{=$>$\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{self}\hlopt{::}\hlstd{MANY\textunderscore MANY}\hlopt{,\ }\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'People'}\hlstd{}\hlopt{,\ }\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'tbl\textunderscore project\textunderscore people\textunderscore execute(project\textunderscore id,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstr{people\textunderscore id)'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'order'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlstr{'execute\textunderscore peoples\textunderscore execute\textunderscore .seq'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'alias'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlstr{'execute\textunderscore '}\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hspace*{\fill}\\
+\hlopt{\}}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+在定义了数据库表关系之后，可以在控制器层中方便地执行关联查询以及增删改查，就像访问科研项目的模型类Project本身的属性一样：
+
+% //获取 ID 为 10 的科研项目
+% $project=Project::model()->findByPk(10);
+% //获取此科研项目的维护者的姓名: 此处将执行一个关联查询。
+% $maintainter=$project->maintainter->name;
+% //获取此科研项目的所有实际执行人员
+% //将返回一个人员对象的数组
+% $exec_peoples=$project->execute_peoples;
+\noindent
+\ttfamily
+\hlstd{}\hlslc{//获取\ ID\ 为\ 10\ 的科研项目}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{=}\hlstd{Project}\hlopt{::}\hlstd{}\hlkwd{model}\hlstd{}\hlopt{(){-}$>$}\hlstd{}\hlkwd{findByPk}\hlstd{}\hlopt{(}\hlstd{}\hlnum{10}\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlslc{//获取此科研项目的维护者的姓名:\ }\Righttorque\hspace*{\fill}\\
+\hlslc{此处将执行一个关联查询。}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$maintainter}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{maintainter}\hlopt{{-}$>$}\hlstd{name}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlslc{//获取此科研项目的所有实际执行人员}\hspace*{\fill}\\
+\hlstd{}\hlslc{//将返回一个人员对象的数组}\hspace*{\fill}\\
+\hlstd{}\hlkwc{\$exec\textunderscore peoples}\hlstd{}\hlopt{=}\hlstd{}\hlkwc{\$project}\hlstd{}\hlopt{{-}$>$}\hlstd{execute\textunderscore peoples}\hlopt{;}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\subsection{验证数据有效性}
+
+% public function rules()
+% {
+% 	return array(
+% 		array('name','required'),
+% 		array('is_intl, is_national, is_provincial, is_city, is_school, is_enterprise, is_NSF, is_973, is_863, is_NKTRD, is_DFME, is_major', 'numerical', 'integerOnly'=>true),
+% 		array('name, number, fund_number', 'length', 'max'=>255),
+% 		array('app_fund, pass_fund', 'length', 'max'=>15),
+% 		array('start_date, deadline_date, conclude_date, app_date, pass_date', 'safe'),
+% 		array('id, name, number, fund_number, is_intl, is_national, is_provincial, is_city, is_school, is_enterprise, is_NSF, is_973, is_863, is_NKTRD, is_DFME, is_major, start_date, deadline_date, conclude_date, app_date, pass_date, app_fund, pass_fund, ', 'safe', 'on'=>'search'),
+% 	);
+% }
+
+
+当插入或更新一行时，我们常常需要检查列的值是否符合相应的规则。 如果列的值是由最终用户提供的，这一点就更加重要。总体来说，为了防止恶意攻击，永远不能相信任何来自客户端的数据。为了维护本系统数据的有效性，在本系统的模型层需要定义验证输入数据有效性的规则。
+
+当调用~AR~类的实例的save()方法时，AR~类的实例会自动执行数据验证。验证是基于在~AR~类的rules() 方法中指定的规则进行的。如下面给出的PHP代码，通过根据在第~\pageref{project}~页第~\ref{project}~节建立的数据库表的结构，在科研项目模型类Project中复写父类的rules()方法，可以完成对数据验证规则的定义。这样以来，控制层便能判断用户输入、提交数据是否有效，避免了无效数据的录入或者是恶意攻击的可能性。
+
+\noindent
+\ttfamily
+\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{rules}\hlstd{}\hlopt{()}\hspace*{\fill}\\
+\hlstd{}\hlopt{\{}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{return\ array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{,}\hlstd{}\hlstr{'required'}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore intl,\ is\textunderscore national,\ is\textunderscore provincial,\ is\textunderscore city,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{is\textunderscore school,\ is\textunderscore enterprise,\ is\textunderscore NSF,\ is\textunderscore 973,\ is\textunderscore 863,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{is\textunderscore NKTRD,\ is\textunderscore DFME,\ is\textunderscore major'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'numerical'}\hlstd{}\hlopt{,\ }\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'integerOnly'}\hlstd{}\hlopt{=$>$}\hlstd{true}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'name,\ number,\ fund\textunderscore number'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'length'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'max'}\hlstd{}\hlopt{=$>$}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlnum{255}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'app\textunderscore fund,\ pass\textunderscore fund'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'length'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'max'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlnum{15}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'start\textunderscore date,\ deadline\textunderscore date,\ conclude\textunderscore date,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{app\textunderscore date,\ pass\textunderscore date'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'safe'}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'id,\ name,\ number,\ fund\textunderscore number,\ is\textunderscore intl,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{is\textunderscore national,\ is\textunderscore provincial,\ is\textunderscore city,\ is\textunderscore school,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{is\textunderscore enterprise,\ is\textunderscore NSF,\ is\textunderscore 973,\ is\textunderscore 863,\ is\textunderscore NKTRD,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{is\textunderscore DFME,\ is\textunderscore major,\ start\textunderscore date,\ deadline\textunderscore date,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{conclude\textunderscore date,\ app\textunderscore date,\ pass\textunderscore date,\ app\textunderscore fund,\ }\Righttorque\hspace*{\fill}\\
+\hlstr{}\hlstd{\ \ \ \ \ \ \ \ }\hlstr{pass\textunderscore fund,\ '}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'safe'}\hlstd{}\hlopt{,\ }\hlstd{}\hlstr{'on'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlstr{'search'}\hlstd{}\hlopt{),}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlopt{\}}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
+
+\subsection{搜索与筛选}
+Yii框架中的~CDbCriteria~类代表了一条数据库查询的条件，比如说~MySQL~中的~WHERE~字句、~AND~运算符、~OR~运算符、~ORDER BY~子句等。利用它来创建在搜索与查询中需要添加的条件，生成对应的SQL语句。
+利用~CDbCriteria~类提供的compare()方法，可以实现搜索与筛选功能。compare()的作用是添加一个比较条件到最终生成的SQL语句的~WHERE~字句中去。还可以通过设置~CDbCriteria~类的~condition~、~group~、~order~等属性，配置SQL中对应的条件。
+
+CActiveDataProvider~类使用AR的CActiveRecord::findAll()方法， 从数据库中检索信息。它的criteria属性是~CDbCriteria~类的一个实例，能够用来查询多种指定条件。
+
+如下面的PHP代码所示，利用~CDbCriteria~类，实现了科研项目模型类~Project~中的搜索方法~search()~，提供给本系统的控制器层调用。search()~方法将~Project~类的各个属性通过一个~CDbCriteria~实例的~compare()~方法添加到了查询条件中，最后利用这些查询条件作为一个~CActiveDataProvider~类的实例构造函数的参数，传递给这个~CActiveDataProvider~类的实例，并返回给供模型层使用。
+
+% public function search()
+% {
+
+% 	$criteria=new CDbCriteria;
+% 	$criteria->with=array(
+% 		'execute_peoples',
+% 		'liability_peoples'
+% 	);
+% 	$criteria->together=true;
+% 	$criteria->group = 't.id';
+% 	$criteria->compare('execute_peoples.id',$this->searchExecutePeople,true);
+% 	$criteria->compare('liability_peoples.id',$this->searchLiabilityPeople,true);
+% 	$criteria->compare('name',$this->name,true);
+% 	$criteria->compare('number',$this->number,true);
+% 	$criteria->compare('fund_number',$this->fund_number,true);
+% 	$criteria->compare('is_intl',$this->is_intl);
+% 	$criteria->compare('is_national',$this->is_national);
+% 	$criteria->compare('is_provincial',$this->is_provincial);
+% 	$criteria->compare('is_city',$this->is_city);
+% 	$criteria->compare('is_school',$this->is_school);
+% 	$criteria->compare('is_enterprise',$this->is_enterprise);
+% 	$criteria->compare('is_NSF',$this->is_NSF);
+% 	$criteria->compare('is_973',$this->is_973);
+% 	$criteria->compare('is_863',$this->is_863);
+% 	$criteria->compare('is_NKTRD',$this->is_NKTRD);
+% 	$criteria->compare('is_DFME',$this->is_DFME);
+% 	$criteria->compare('is_major',$this->is_major);
+% 	$criteria->compare('start_date',$this->start_date,true);
+% 	$criteria->compare('deadline_date',$this->deadline_date,true);
+% 	$criteria->compare('conclude_date',$this->conclude_date,true);
+% 	$criteria->compare('app_date',$this->app_date,true);
+% 	$criteria->compare('pass_date',$this->pass_date,true);
+% 	$criteria->compare('app_fund',$this->app_fund,true);
+% 	$criteria->compare('pass_fund',$this->pass_fund,true);
+
+% 	return new CActiveDataProvider($this, array(
+% 		'criteria'=>$criteria,
+% 	));
+% }
+\noindent
+\ttfamily
+\hlstd{}\hlkwa{public\ function\ }\hlstd{}\hlkwd{search}\hlstd{}\hlopt{()}\hspace*{\fill}\\
+\hlstd{}\hlopt{\{}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{=}\hlstd{}\hlkwa{new\ }\hlstd{CDbCriteria}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{with}\hlopt{=}\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'execute\textunderscore peoples'}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'liability\textunderscore peoples'}\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{together}\hlopt{=}\hlstd{true}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{group\ }\hlopt{=\ }\hlstd{}\hlstr{'t.id'}\hlstd{}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'execute\textunderscore peoples.id'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{searchExecutePeople}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'liability\textunderscore peoples.id'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{searchLiabilityPeople}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'name'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{name}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'number'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{number}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'fund\textunderscore number'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{fund\textunderscore number}\hlopt{,}\hlstd{true}\hlopt{)}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{;}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore intl'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore intl}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore national'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore national}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore provincial'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore provincial}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore city'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore city}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore school'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore school}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore enterprise'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore enterprise}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore NSF'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore NSF}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore 973'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore 973}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore 863'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore 863}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore NKTRD'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore NKTRD}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore DFME'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore DFME}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'is\textunderscore major'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{is\textunderscore major}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'start\textunderscore date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{start\textunderscore date}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'deadline\textunderscore date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{deadline\textunderscore date}\hlopt{,}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'conclude\textunderscore date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{conclude\textunderscore date}\hlopt{,}\Righttorque\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'app\textunderscore date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{app\textunderscore date}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'pass\textunderscore date'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{pass\textunderscore date}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'app\textunderscore fund'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{app\textunderscore fund}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{{-}$>$}\hlstd{}\hlkwd{compare}\hlstd{}\hlopt{(}\hlstd{}\hlstr{'pass\textunderscore fund'}\hlstd{}\hlopt{,}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{{-}$>$}\hlstd{pass\textunderscore fund}\hlopt{,}\hlstd{true}\hlopt{);}\hspace*{\fill}\\
+\hlstd{\hspace*{\fill}\\
+}\hlstd{\ \ \ \ }\hlstd{}\hlkwa{return\ new\ }\hlstd{}\hlkwd{CActiveDataProvider}\hlstd{}\hlopt{(}\hlstd{}\hlkwc{\$this}\hlstd{}\hlopt{,\ }\hlstd{}\hlkwa{array}\hlstd{}\hlopt{(}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ \ \ \ \ }\hlstd{}\hlstr{'criteria'}\hlstd{}\hlopt{=$>$}\hlstd{}\hlkwc{\$criteria}\hlstd{}\hlopt{,}\hspace*{\fill}\\
+\hlstd{}\hlstd{\ \ \ \ }\hlstd{}\hlopt{));}\hspace*{\fill}\\
+\hlstd{}\hlopt{\}}\hlstd{}\hspace*{\fill}\\
+\mbox{}
+\normalfont
+\normalsize
