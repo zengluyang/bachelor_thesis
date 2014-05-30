@@ -244,30 +244,6 @@
 	"buffers":
 	[
 		{
-			"file": "chapters/demand.tex",
-			"settings":
-			{
-				"buffer_size": 7425,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "chapters/foundation.tex",
-			"settings":
-			{
-				"buffer_size": 3725,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "chapters/impl.tex",
-			"settings":
-			{
-				"buffer_size": 53092,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "chapters/test.tex",
 			"settings":
 			{
@@ -279,24 +255,16 @@
 			"file": "thesis.tex",
 			"settings":
 			{
-				"buffer_size": 317,
+				"buffer_size": 371,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "contents/original.tex",
+			"file": "chapters/scheme.tex",
 			"settings":
 			{
-				"buffer_size": 7932,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "contents/reference.bib",
-			"settings":
-			{
-				"buffer_size": 4831,
-				"line_ending": "Windows"
+				"buffer_size": 5807,
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -404,31 +372,34 @@
 	},
 	"file_history":
 	[
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/scheme.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/impl.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/foundation.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/scheme.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/demand.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/test.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/appendix.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/foundation.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/intro.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.tex",
+		"/d/Desktop/EnglishAbstract.txt",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Eabstract.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/acronym.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Cabstract.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/original.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/reference.bib",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/acknowledgements.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/acr.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/test.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/ending.tex",
+		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/appendix.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/packagecheck.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.sublime-workspace",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/uestcthesis.bst",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/uestcthesis.cls",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/thesis.sublime-project",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/pics/add_rect.py",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/intro.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/math.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/chapters/tuition.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Cabstract.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/论文_曾路洋.pdf",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/titlepage.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/Eabstract.tex",
 		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/translation.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/original.tex",
-		"/D/Dropbox/Documents/coding/毕设/thesis_src/contents/reference.bib",
 		"/D/Dropbox/dev_htdocs/team/protected/tests/functional/SiteTest.php",
 		"/D/Dropbox/dev_htdocs/team/protected/tests/ab_n_1000.txt",
 		"/D/Dropbox/dev_htdocs/team/protected/tests/ab_n_1000_c_200.txt",
@@ -528,10 +499,7 @@
 		"/home/zly/.config/sublime-text-2/Packages/AdvancedNewFile/README.md",
 		"/home/zly/.config/sublime-text-2/Packages/AdvancedNewFile/Default (Linux).sublime-keymap",
 		"/home/zly/Desktop/digit.csc",
-		"/D/Desktop/digit_stupid_broadcast/RadioToLedsC.nc",
-		"/D/Dropbox/coding/setting/Sublime Text 2/windows/Packages/User/gcc.sublime-build",
-		"/D/Dropbox/coding/setting/Sublime Text 2/windows/Packages/User/necC.sublime-build",
-		"/D/Dropbox/coding/setting/Sublime Text 2/windows/Packages/C++/C++.sublime-build"
+		"/D/Desktop/digit_stupid_broadcast/RadioToLedsC.nc"
 	],
 	"find":
 	{
@@ -542,6 +510,8 @@
 		"height": 90.0,
 		"where_history":
 		[
+			"*.tex",
+			"*.pdf",
 			"",
 			"ack*.tex",
 			"*.tex",
@@ -554,6 +524,19 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"筛选与",
+			"Ajax",
+			"显示",
+			"technology",
+			"AJAX",
+			"C/S",
+			"B/S",
+			"RDBMS",
+			"C/S",
+			"MVC",
+			"支柱",
+			"perf",
+			"yiiperf",
 			"高性能键值服务器",
 			"`",
 			"\\}",
@@ -668,20 +651,7 @@
 			"medium-1",
 			"row",
 			"textField",
-			"row",
-			")",
-			"attributeLabels",
-			"is",
-			"is_enterprise",
-			"is_provincial",
-			"is_national",
-			"is_intl",
-			"index_date",
-			"textField",
-			"row",
-			"self::",
-			"not-click",
-			"right"
+			"row"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -689,6 +659,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"资助",
 			"\\textasciigrave ",
 			"\\symbol {125}",
 			"\\symbol {123}",
@@ -728,401 +699,11 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "chapters/demand.tex",
-					"settings":
-					{
-						"buffer_size": 7425,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7425,
-								7350
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 6088.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "chapters/foundation.tex",
-					"settings":
-					{
-						"buffer_size": 3725,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3725,
-								3629
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2448.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "chapters/impl.tex",
-					"settings":
-					{
-						"buffer_size": 53092,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								53092,
-								53006
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 25542.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
 					"file": "chapters/test.tex",
 					"settings":
 					{
@@ -1133,8 +714,8 @@
 						"selection":
 						[
 							[
-								5743,
-								5743
+								5813,
+								5813
 							]
 						],
 						"settings":
@@ -1246,25 +827,25 @@
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3478.0,
+						"translation.y": 3762.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 1,
 					"file": "thesis.tex",
 					"settings":
 					{
-						"buffer_size": 317,
+						"buffer_size": 371,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								201,
-								201
+								305,
+								305
 							]
 						],
 						"settings":
@@ -1278,19 +859,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "contents/original.tex",
+					"buffer": 2,
+					"file": "chapters/scheme.tex",
 					"settings":
 					{
-						"buffer_size": 7932,
+						"buffer_size": 5807,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								58,
-								58
+								4135,
+								4135
 							]
 						],
 						"settings":
@@ -1402,139 +983,7 @@
 							"syntax": "Packages/LaTeX/LaTeX.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "contents/reference.bib",
-					"settings":
-					{
-						"buffer_size": 4831,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1863,
-								1863
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/LaTeX/Bibtex.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1998.0,
+						"translation.y": 2358.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1592,16 +1041,56 @@
 		"selected_items":
 		[
 			[
+				"sche",
+				"chapters/scheme.tex"
+			],
+			[
+				"de",
+				"chapters/demand.tex"
+			],
+			[
+				"found",
+				"chapters/foundation.tex"
+			],
+			[
+				"fon",
+				"chapters/foundation.tex"
+			],
+			[
+				"ea",
+				"contents/Eabstract.tex"
+			],
+			[
+				"imp",
+				"chapters/impl.tex"
+			],
+			[
+				"the",
+				"thesis.tex"
+			],
+			[
+				"intro",
+				"chapters/intro.tex"
+			],
+			[
+				"ack",
+				"contents/acknowledgements.tex"
+			],
+			[
+				"eab",
+				"contents/Eabstract.tex"
+			],
+			[
+				"cab",
+				"contents/Cabstract.tex"
+			],
+			[
 				"bib",
 				"contents/reference.bib"
 			],
 			[
 				"or",
 				"contents/original.tex"
-			],
-			[
-				"the",
-				"thesis.tex"
 			],
 			[
 				"test",
@@ -1632,10 +1121,6 @@
 				"contents/appendix.tex"
 			],
 			[
-				"intro",
-				"chapters/intro.tex"
-			],
-			[
 				"sch",
 				"chapters/scheme.tex"
 			],
@@ -1644,20 +1129,8 @@
 				"chapters/impl.tex"
 			],
 			[
-				"de",
-				"chapters/demand.tex"
-			],
-			[
-				"cab",
-				"contents/Cabstract.tex"
-			],
-			[
 				"deman",
 				"chapters/demand.tex"
-			],
-			[
-				"imp",
-				"chapters/impl.tex"
 			],
 			[
 				"fi",
@@ -1666,10 +1139,6 @@
 			[
 				"te",
 				"chapters/test.tex"
-			],
-			[
-				"sche",
-				"chapters/scheme.tex"
 			],
 			[
 				"foundation",
@@ -2082,26 +1551,6 @@
 			[
 				"viewproje",
 				"protected/views/project/view.php"
-			],
-			[
-				"projecon",
-				"protected/controllers/ProjectController.php"
-			],
-			[
-				"contpaper",
-				"protected/controllers/PaperController.php"
-			],
-			[
-				"viewpainde",
-				"protected/views/patent/index.php"
-			],
-			[
-				"viewpatent_v",
-				"protected/views/patent/_view.php"
-			],
-			[
-				"foundma",
-				"themes/foundation4/views/layouts/main.php"
 			]
 		],
 		"width": 0.0
