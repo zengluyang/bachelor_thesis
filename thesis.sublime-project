@@ -2,12 +2,7 @@
 	"folders":
 	[
 		{
-<<<<<<< HEAD
-			"path": "/D/Dropbox/Documents/coding/毕设/thesis_src"
-		}
-	]
-}
-=======
+
 			"path": "/D/Dropbox/Documents/coding/毕设/thesis_src",
             "file_exclude_patterns": ["*.ps","*.dvi","*.log","*.aux","*.glg","*.glo","*.out","*.bbl","*.thm","*.toc","*.acn","*.lst","*.ist","*.blg","*.acr","*.alg","logo.*","*.gls"]
 		}
@@ -20,5 +15,3 @@
         }
     ]
 }
-
->>>>>>> lost_changes
