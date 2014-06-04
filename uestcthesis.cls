@@ -298,6 +298,7 @@
 \raggedright%
 \sbox{\tempsubpiccaptionbox}{\parbox{\textwidth}%
 {\zihao{5}图~\thefigure~\subpiccaption}}%
+%\settowidth{\tempsubpiccaptionheadindent}{\zihao{5}图~\thefigure~}%
 \settowidth{\tempsubpiccaptionheadindent}{\zihao{5}图~\thefigure~}%
 \ifthenelse{\lengthtest{\ht\tempsubpiccaptionbox > 16pt}}{%THEN
 \noindent\caption{\subpiccaption}\label{\subpiclabel}\par%
@@ -306,14 +307,14 @@
 }{%ELSE
 {\centering\caption{\subpiccaption}\label{\subpiclabel}}\par
 \sbox{\tempsubpiccaptionbox}{\zihao{5}图~\thefigure~\subpiccaption}%
-\setlength{\tempsubpiccaptionindent}{\textwidth}%
-\addtolength{\tempsubpiccaptionindent}{-\wd\tempsubpiccaptionbox}%
-\setlength{\tempsubpiccaptionindent}{.5\tempsubpiccaptionindent}%
-\setlength{\tempsubpiccaptionwidth}{\textwidth}%
-\addtolength{\tempsubpiccaptionwidth}{-\tempsubpiccaptionindent}%
-\addtolength{\tempsubpiccaptionwidth}{-\tempsubpiccaptionheadindent}%
-\hspace*{\tempsubpiccaptionindent}\hspace*{\tempsubpiccaptionheadindent}%
-\parbox{\tempsubpiccaptionwidth}{\zihao{5}\allsubpiccaptions}%
+%\setlength{\tempsubpiccaptionindent}{\textwidth}%
+%\addtolength{\tempsubpiccaptionindent}{-\wd\tempsubpiccaptionbox}%
+%\setlength{\tempsubpiccaptionindent}{.0\tempsubpiccaptionindent}%
+%\setlength{\tempsubpiccaptionwidth}{\textwidth}%
+%\addtolength{\tempsubpiccaptionwidth}{-\tempsubpiccaptionindent}%
+%\addtolength{\tempsubpiccaptionwidth}{-\tempsubpiccaptionheadindent}%
+%\hspace*{\tempsubpiccaptionindent}\hspace*{\tempsubpiccaptionheadindent}%
+\centering{\zihao{5}\allsubpiccaptions}%
 }%
 \vspace{6bp}%
 \end{figure}%
@@ -3437,7 +3438,7 @@ pdfkeywords={\@pdfckeywords}%在pdf元信息中加入关键字
 {\bf Keywords:\nbs}\parbox[t]{367.97586pt}{\@ekeywords}%插入关键词
 }
 \CTEXoptions[contentsname={\protect\heiti\protect\zihao{-3}目\enspace 录}]
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{2}
 \def\@dotsep{2}
 \def\l@chapter#1#2{\ifnum 0>\c@tocdepth \else \vskip \z@ \@plus .2\p@ {\leftskip
 0em\relax \rightskip \@tocrmarg \parfillskip -\rightskip \parindent 0em\relax
@@ -3582,7 +3583,7 @@ pdfpagelayout={TwoPageRight}
 &
 \glssubentryitem{##2}%
 \glstarget{##2}{\strut}\csname glo@##2@first\endcsname &
-\glossentrydesc{##2}\tabularnewline
+\glossentrydesc{##2}%\tabularnewline
 }%
 }
 

@@ -157,14 +157,14 @@ ApacheBench参数说明:
 本次测试中，使用在表~\ref{clientconfig}~中给出的客户端进行测试，服务器和客户端连在同一局域网内，以消除网络的不稳定性对测试的影响，同时能够给予服务器更大的压力。
 \begin{enumerate}
 \item 低负载测试，访问次数为1000，并发数为1，测试命令：\\
-ab -n 1000 http://192.168.1.10/team/index.php?r=project/index
+ab -n 1000 http://localhost/team/index.php?r=project/index
 \item 高负载测试，访问次数为1000，并发数为200，测试命令：\\
-ab -n 1000 -c 200 http://192.168.1.10 http://192.168.1.10/team/index.php?r=project/index
+ab -n 1000 -c 200 http://localhost/team/index.php?r=project/index
 \end{enumerate}
 
 \subsection{测试结果}
 
-性能测试的结果见表~\ref{ablowcontest}~
+性能测试的结果见表~\ref{ablowcontest}~，分别给出了低负载和高负载测试的并发请求数和平均响应时间。
 
 \threelinetable[H]{ablowcontest}{0.55\textwidth}{lcr}{性能测试结果}
 {性能参数&低负载&高负载\\
