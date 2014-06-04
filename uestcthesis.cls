@@ -3557,7 +3557,7 @@ pdfpagelayout={TwoPageRight}
 \providecommand{\hlkwc}[1]{\textcolor[rgb]{0,0,0}{\txttbf{#1}}}
 \providecommand{\hlkwd}[1]{\textcolor[rgb]{0,0,0}{\txttbf{#1}}}
 \definecolor{bgcolor}{rgb}{1,1,1}
-\RequirePackage[style=long3colheader,description,acronym]{glossaries}
+\RequirePackage[style=long3colheader,description,acronym,nogroupskip]{glossaries}
 \makeglossaries
 \renewcommand{\glossaryname}{\glossaryname@uestcthesis}
 \renewcommand{\entryname}{\entryname@uestcthesis}
@@ -3576,14 +3576,14 @@ pdfpagelayout={TwoPageRight}
 {\begin{longtable}{lp{\glsdescwidth}p{7em}}}%
 {\end{longtable}}%
 \renewcommand{\glossentry}[2]{%重定义显示什么列：缩略词、英文全称、中文全称
-\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}}\rule{0pt}{4ex}&
 \csname glo@##1@first\endcsname & \glossentrydesc{##1}\tabularnewline
 }%
 \renewcommand{\subglossentry}[3]{%
 &
 \glssubentryitem{##2}%
 \glstarget{##2}{\strut}\csname glo@##2@first\endcsname &
-\glossentrydesc{##2}%\tabularnewline
+\glossentrydesc{##2}\tabularnewline
 }%
 }
 
